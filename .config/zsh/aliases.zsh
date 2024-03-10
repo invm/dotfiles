@@ -5,3 +5,4 @@ alias grep=rg
 alias ls=exa
 alias pn=pnpm
 alias t=tmux
+alias cl=clear
