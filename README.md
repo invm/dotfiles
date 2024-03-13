@@ -1,16 +1,5 @@
 # Dotfiles
 
-## Tools to install
+## Install script
 
-- gnu stow
-- tmux
-- neovim
-- fzf
-- ripgrep
-- exa
-- bat
-- lazygit
-- rust
-- n and node
-- pnpm
-
+Run `./scripts/install.sh` to install packages and copy dotfiles.
