@@ -20,7 +20,7 @@ brew install zsh
 command -v zsh | sudo tee -a /etc/shells
 sudo chsh -s "$(command -v zsh)" "${USER}"
 
-packages="stow wget tree htop tmux neovim
+packages="stow wget tree htop tmux vim neovim
   eza fzf bat ripgrep zoxide xclip scc diff-so-fancy
   fd dog atuin btop dust tldr lazydocker entr virtualenv
   zsh-syntax-highlighting zsh-completions zsh-autosuggestions
@@ -56,5 +56,8 @@ curl -L https://bit.ly/n-install | bash
 curl -fsSL https://get.pnpm.io/install.sh | sh -
 
 stow .
+
+# configure lazygit to use diff-so-fancy
+# https://github.com/jesseduffield/lazygit/blob/master/docs/Custom_Pagers.md
 
 echo "Done! Please restart your terminal."
