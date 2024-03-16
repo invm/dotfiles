@@ -8,12 +8,13 @@ NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ho
 
 # uninstall brew
 # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"
+is_mac=$(uname -a | grep -i -c "darwin" | wc -l)
 
-(
-	echo
-	echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
-) >>/home/mike/.zshrc
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+if [ "$is_mac" -eq 0 ]; then
+	test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
+	test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+	echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >>~/.bashrc
+fi
 
 brew install zsh
 
