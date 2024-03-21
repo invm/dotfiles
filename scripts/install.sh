@@ -25,7 +25,7 @@ packages="stow wget tree htop tmux vim neovim
   eza fzf bat ripgrep zoxide xclip scc diff-so-fancy
   fd dog atuin btop dust tldr lazydocker entr virtualenv
   zsh-syntax-highlighting zsh-completions zsh-autosuggestions
-  lazygit jq yq
+  lazygit jq yq gnu-sed
   "
 
 for package in $packages; do
