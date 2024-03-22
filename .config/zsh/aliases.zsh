@@ -6,3 +6,6 @@ alias ls=eza
 alias pn=pnpm
 alias t=tmux
 alias cl=clear
+alias k=kubectl
+alias f="kubectl logs -f"
+alias d="kubectl describe"
