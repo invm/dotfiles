@@ -2,4 +2,4 @@
 
 ## Install script
 
-Run `./scripts/install.sh` to install packages and copy dotfiles.
+Run `./install.sh` to install packages and copy dotfiles.
