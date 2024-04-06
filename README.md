@@ -2,4 +2,6 @@
 
 ## Install script
 
-Run `./install.sh` to install packages and copy dotfiles.
+Run `./install/brew.sh` to Wezterm, Brew, Zsh and oh-my-zsh.
+
+Run `./install/packages.sh` to install everything else.
