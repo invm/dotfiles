@@ -8,17 +8,25 @@ local config = wezterm.config_builder()
 
 -- For example, changing the color scheme:
 -- config.color_scheme = 'tokyonight-storm'
-config.color_scheme = "BlulocoDark"
+-- config.color_scheme = "BlulocoDark"
 config.enable_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = true
 -- https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.0/ComicShannsMono.zip
 config.font = wezterm.font("ComicShannsMono Nerd Font")
-config.font_size = 13
+config.font_size = 14
 config.window_padding = {
 	left = 0,
 	right = 0,
 	top = 0,
 	bottom = 0,
+}
+config.keys = {
+  -- META + h/l to navigate words
+	{ key = "h", mods = "OPT", action = wezterm.action({ SendString = "\x1bb" }) },
+	{ key = "l", mods = "OPT", action = wezterm.action({ SendString = "\x1bf" }) },
+  -- CTRL + h/l to navigate single characters
+	{ key = "h", mods = "CTRL", action = wezterm.action.SendKey({ key = "LeftArrow" }) },
+	{ key = "l", mods = "CTRL", action = wezterm.action.SendKey({ key = "RightArrow" }) },
 }
 
 -- and finally, return the configuration to wezterm
