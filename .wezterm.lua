@@ -1,5 +1,7 @@
 -- Pull in the wezterm API
 local wezterm = require("wezterm")
+local action = wezterm.action
+local SendKey = action.SendKey
 
 -- This will hold the configuration.
 local config = wezterm.config_builder()
@@ -21,12 +23,8 @@ config.window_padding = {
 	bottom = 0,
 }
 config.keys = {
-  -- META + h/l to navigate words
-	{ key = "h", mods = "OPT", action = wezterm.action({ SendString = "\x1bb" }) },
-	{ key = "l", mods = "OPT", action = wezterm.action({ SendString = "\x1bf" }) },
-  -- CTRL + h/l to navigate single characters
-	{ key = "h", mods = "CTRL", action = wezterm.action.SendKey({ key = "LeftArrow" }) },
-	{ key = "l", mods = "CTRL", action = wezterm.action.SendKey({ key = "RightArrow" }) },
+	{ key = "h", mods = "OPT", action = SendKey({ key = "LeftArrow" }) },
+	{ key = "l", mods = "OPT", action = SendKey({ key = "RightArrow" }) },
 }
 
 -- and finally, return the configuration to wezterm
