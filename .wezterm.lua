@@ -23,6 +23,8 @@ config.window_padding = {
 	bottom = 0,
 }
 config.keys = {
+	{ key = "LeftArrow", mods = "OPT", action = wezterm.action({ SendString = "\x1bb" }) },
+	{ key = "RightArrow", mods = "OPT", action = wezterm.action({ SendString = "\x1bf" }) },
 	{ key = "h", mods = "OPT", action = SendKey({ key = "LeftArrow" }) },
 	{ key = "l", mods = "OPT", action = SendKey({ key = "RightArrow" }) },
 }
