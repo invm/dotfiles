@@ -7,27 +7,32 @@ local SendKey = action.SendKey
 local config = wezterm.config_builder()
 
 -- This is where you actually apply your config choices
+local opts = {
+	enable_tab_bar = false,
+	hide_tab_bar_if_only_one_tab = true,
+	-- color_scheme = "tokyonight-storm",
+	-- color_scheme = "BlulocoDark",
+	-- https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.0/ComicShannsMono.zip
+	font = wezterm.font("ComicShannsMono Nerd Font"),
+	font_size = 15,
+	audible_bell = "Disabled",
+	window_padding = {
+		left = 0,
+		right = 0,
+		top = 0,
+		bottom = 0,
+	},
+	keys = {
+		{ key = "LeftArrow", mods = "OPT", action = action({ SendString = "\x1bb" }) },
+		{ key = "RightArrow", mods = "OPT", action = action({ SendString = "\x1bf" }) },
+		{ key = "h", mods = "OPT", action = SendKey({ key = "LeftArrow" }) },
+		{ key = "l", mods = "OPT", action = SendKey({ key = "RightArrow" }) },
+	},
+}
 
--- For example, changing the color scheme:
--- config.color_scheme = 'tokyonight-storm'
--- config.color_scheme = "BlulocoDark"
-config.enable_tab_bar = false
-config.hide_tab_bar_if_only_one_tab = true
--- https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.0/ComicShannsMono.zip
-config.font = wezterm.font("ComicShannsMono Nerd Font")
-config.font_size = 14
-config.window_padding = {
-	left = 0,
-	right = 0,
-	top = 0,
-	bottom = 0,
-}
-config.keys = {
-	{ key = "LeftArrow", mods = "OPT", action = wezterm.action({ SendString = "\x1bb" }) },
-	{ key = "RightArrow", mods = "OPT", action = wezterm.action({ SendString = "\x1bf" }) },
-	{ key = "h", mods = "OPT", action = SendKey({ key = "LeftArrow" }) },
-	{ key = "l", mods = "OPT", action = SendKey({ key = "RightArrow" }) },
-}
+for k, v in pairs(opts) do
+	config[k] = v
+end
 
 -- and finally, return the configuration to wezterm
 return config
