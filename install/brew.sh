@@ -24,11 +24,12 @@ brew install zsh
 command -v zsh | sudo tee -a /etc/shells
 sudo chsh -s "$(command -v zsh)" "${USER}"
 
-echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>~/.zshrc
-
+if [ "$is_mac" -ne 0 ]; then
+	echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>~/.zshrc
+fi
 # # install oh-my-zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
 sudo update-alternatives --config x-terminal-emulator
 
-echo "Wezterm, Brew and zsh were installed, restart your terminal."
+echo "Wezterm, Brew and Zsh were installed, restart your terminal."
