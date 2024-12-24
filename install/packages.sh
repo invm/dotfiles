@@ -44,7 +44,7 @@ source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 eval "$(zoxide init zsh)"
 
 # Load seperated config files
-for conf in "$HOME/.config/zsh/"*.zsh; do
+for conf in "$HOME/.config/zsh/"*.sh; do
   source "${conf}"
 done
 unset conf
