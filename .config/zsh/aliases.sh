@@ -17,3 +17,15 @@ HISTFILE=~/.zsh_history
 HISTSIZE=100000
 SAVEHIST=100000
 setopt appendhistory
+
+# usage: git_clone_folder <repo> <folder>
+git_clone_folder() {
+	local repo=$1
+	local name
+	name=$(echo "$1" | awk -F'/' '{print $NF}' | sed 's/.git$//')
+	local folder=$2
+	git clone -n --depth=1 --filter=tree:0 "$repo"
+	cd "$name" || exit 1
+	git sparse-checkout set --no-cone "$folder"
+	git checkout
+}

@@ -3,7 +3,7 @@ set -e
 
 packages="stow wget tree htop tmux vim neovim
   eza fzf bat ripgrep zoxide xclip scc diff-so-fancy
-  fd dog btop dust tldr lazydocker entr virtualenv
+  fd btop dust tldr lazydocker entr virtualenv
   zsh-syntax-highlighting zsh-completions zsh-autosuggestions
   lazygit jq yq gnu-sed
   "
