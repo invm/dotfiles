@@ -8,7 +8,9 @@ NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ho
 
 # uninstall brew
 # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"
-
+echo >> $HOME/.bashrc
+echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> $HOME/.bashrc
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 brew install zsh
 
 command -v zsh | sudo tee -a /etc/shells
