@@ -8,6 +8,8 @@ local config = wezterm.config_builder()
 
 -- This is where you actually apply your config choices
 local opts = {
+	send_composed_key_when_left_alt_is_pressed = false,
+	send_composed_key_when_right_alt_is_pressed = false,
 	enable_tab_bar = false,
 	hide_tab_bar_if_only_one_tab = true,
 	-- color_scheme = "tokyonight-storm",
