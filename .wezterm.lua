@@ -1,3 +1,4 @@
+-- https://wezterm.org/config/files.html-
 -- Pull in the wezterm API
 local wezterm = require("wezterm")
 local action = wezterm.action
@@ -12,6 +13,8 @@ local opts = {
 	send_composed_key_when_right_alt_is_pressed = false,
 	enable_tab_bar = false,
 	hide_tab_bar_if_only_one_tab = true,
+  initial_rows = 120,
+  initial_cols = 250,
 	-- color_scheme = "tokyonight-storm",
 	-- color_scheme = "BlulocoDark",
 	-- https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.0/ComicShannsMono.zip
