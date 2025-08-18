@@ -9,12 +9,13 @@ local config = wezterm.config_builder()
 
 -- This is where you actually apply your config choices
 local opts = {
+	window_decorations = "RESIZE",
 	send_composed_key_when_left_alt_is_pressed = false,
 	send_composed_key_when_right_alt_is_pressed = false,
 	enable_tab_bar = false,
 	hide_tab_bar_if_only_one_tab = true,
-  initial_rows = 120,
-  initial_cols = 250,
+	initial_rows = 120,
+	initial_cols = 220,
 	-- color_scheme = "tokyonight-storm",
 	-- color_scheme = "BlulocoDark",
 	-- https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.0/ComicShannsMono.zip
