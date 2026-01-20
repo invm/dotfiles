@@ -26,7 +26,8 @@ curl -fsSL https://get.pnpm.io/install.sh | sh -
 stow .
 
 # oh-my-zsh completions, zoxide init and load custom zsh files
-sed -i 's/source $ZSH\/oh-my-zsh.sh//' ~/.zshrc
+# for ubuntu remove the ''
+sed -i '' 's/source $ZSH\/oh-my-zsh.sh//' ~/.zshrc
 echo '
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 source $ZSH/oh-my-zsh.sh
