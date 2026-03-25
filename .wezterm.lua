@@ -13,6 +13,7 @@ local opts = {
 	send_composed_key_when_left_alt_is_pressed = false,
 	send_composed_key_when_right_alt_is_pressed = false,
 	enable_tab_bar = false,
+	enable_kitty_keyboard = true,
 	hide_tab_bar_if_only_one_tab = true,
 	initial_rows = 120,
 	initial_cols = 220,
@@ -33,6 +34,7 @@ local opts = {
 		{ key = "RightArrow", mods = "OPT", action = action({ SendString = "\x1bf" }) },
 		{ key = "h", mods = "OPT", action = SendKey({ key = "LeftArrow" }) },
 		{ key = "l", mods = "OPT", action = SendKey({ key = "RightArrow" }) },
+		{ key = "Enter", mods = "ALT", action = wezterm.action.DisableDefaultAssignment },
 	},
 }
 
