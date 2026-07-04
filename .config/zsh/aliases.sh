@@ -1,12 +1,16 @@
 alias q=exit
+export EDITOR=nvim
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export CLAUDE_CODE_SUBAGENT_MODEL="claude-sonnet-4-6"
+export CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING=1
+unset CLAUDE_CODE_OAUTH_TOKEN
 alias v=nvim
 alias pn=pnpm
 alias t=tmux
 alias k=kubectl
 alias f="kubectl logs -f"
 alias d="kubectl describe"
-alias wpod="kubectl get pods -A --no-headers | fzf | awk '{ print \$2 }' | xargs -I {} sh -c 'watch \"kubectl get pods -A | grep {} \"'"
-alias lpod="kubectl get pods --no-headers | fzf | awk '{ print \$1 }' | xargs -I {} sh -c 'kubectl logs -f {}'"
 
 source <(fzf --zsh)
 HISTFILE=~/.zsh_history

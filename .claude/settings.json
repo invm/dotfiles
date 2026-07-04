@@ -1,0 +1,128 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(awk *)",
+      "Bash(tail *)",
+      "Bash(for *)",
+      "Bash(sed *)",
+      "Bash(cat *)",
+      "Bash(ls *)",
+      "Bash(wc *)",
+      "Bash(grep *)",
+      "Bash(basename *)",
+      "Bash(dirname *)",
+      "Bash(head *)",
+      "Bash(sort *)",
+      "Bash(uniq *)",
+      "Bash(cut *)",
+      "Bash(tr *)",
+      "Bash(echo *)",
+      "Bash(printf *)",
+      "Bash(find *)",
+      "Bash(jq *)",
+      "Bash(sqlite3 *)",
+      "Bash(stat *)",
+      "Bash(du *)",
+      "Bash(test *)",
+      "Bash(xargs *)",
+      "Bash(date *)",
+      "Bash(which *)",
+      "Bash(ps *)",
+      "Bash(pgrep *)",
+      "Bash(diff *)",
+      "Bash(file *)",
+      "Bash(realpath *)",
+      "Bash(readlink *)",
+      "Bash(chmod *)",
+      "Bash(./scripts/ci-status.sh *)",
+      "Bash(scripts/ci-status.sh *)"
+    ],
+    "defaultMode": "auto"
+  },
+  "model": "opus[1m]",
+  "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$TMUX_PANE\" ] && [ \"$(tmux display -p -t \"$TMUX_PANE\" '#{window_active}')\" != \"1\" ] && tmux set-window-option -t \"$TMUX_PANE\" @status done_err 2>/dev/null || true",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$TMUX_PANE\" ] && [ \"$(tmux display -p -t \"$TMUX_PANE\" '#{window_active}')\" != \"1\" ] && tmux set-window-option -t \"$TMUX_PANE\" @status done_ok 2>/dev/null || true",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$HOME\"/.claude/hooks/rtk-rewrite.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash -c 'input=$(cat); cwd=$(echo \"$input\" | jq -r \".workspace.current_dir\"); dir=$(basename \"$cwd\"); remaining=$(echo \"$input\" | jq -r \".context_window.context_left_until_compact_percentage // empty\"); if [ -n \"$remaining\" ]; then ctx_info=$(printf \"\\033[0;33m[ctx:%d%%]\\033[0m \" \"${remaining%.*}\"); else ctx_info=\"\"; fi; if git -C \"$cwd\" rev-parse --git-dir >/dev/null 2>&1; then branch=$(git -C \"$cwd\" -c core.useBuiltinFSMonitor=false -c core.fsmonitor=false symbolic-ref --short HEAD 2>/dev/null || echo \"detached\"); if ! git -C \"$cwd\" -c core.useBuiltinFSMonitor=false -c core.fsmonitor=false diff --quiet 2>/dev/null || ! git -C \"$cwd\" -c core.useBuiltinFSMonitor=false -c core.fsmonitor=false diff --cached --quiet 2>/dev/null; then status=\" ✗\"; else status=\"\"; fi; git_info=$(printf \" \\033[1;34mgit:(\\033[0;31m%s\\033[1;34m)%s\\033[0m\" \"$branch\" \"$status\"); else git_info=\"\"; fi; printf \"%s\\033[1;32m➜\\033[0m  \\033[0;36m%s\\033[0m%s\" \"$ctx_info\" \"$dir\" \"$git_info\"'"
+  },
+  "enabledPlugins": {
+    "context7@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": false,
+    "frontend-design@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "caveman@caveman": true,
+    "posthog@claude-plugins-official": true,
+    "notion@claude-plugins-official": true,
+    "ponytail@ponytail": true,
+    "piv-speckit@piv-speckit": true
+  },
+  "extraKnownMarketplaces": {
+    "piv-speckit": {
+      "source": {
+        "source": "github",
+        "repo": "galando/piv-speckit"
+      }
+    },
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    }
+  },
+  "effortLevel": "medium",
+  "tui": "default",
+  "skipDangerousModePermissionPrompt": true,
+  "skipWorkflowUsageWarning": true,
+  "theme": "dark-ansi",
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true
+}

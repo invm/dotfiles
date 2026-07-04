@@ -21,7 +21,7 @@ local opts = {
 	-- color_scheme = "BlulocoDark",
 	-- https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.0/ComicShannsMono.zip
 	font = wezterm.font("ComicShannsMono Nerd Font"),
-	font_size = 15,
+	font_size = 14,
 	audible_bell = "Disabled",
 	window_padding = {
 		left = 0,
