@@ -4,15 +4,23 @@ input=$(cat)
 cwd=$(echo "$input" | jq -r '.workspace.current_dir')
 dir="$(basename "$(dirname "$cwd")")/$(basename "$cwd")"
 
-read -r used pct sess < <(echo "$input" | jq -r '[
+read -r used pct sess reset < <(echo "$input" | jq -r '[
   ((.context_window.total_input_tokens // 0) + (.context_window.total_output_tokens // 0)),
   (.context_window.used_percentage // 0),
-  (.rate_limits.five_hour.used_percentage // -1)
+  (.rate_limits.five_hour.used_percentage // -1),
+  (.rate_limits.five_hour.resets_at // 0)
 ] | @tsv')
 
 k=$(( used / 1000 ))
 meter="ctx ${k}k (${pct%.*}%)"
-[ "${sess%.*}" -ge 0 ] 2>/dev/null && meter="$meter · 5h ${sess%.*}%"
+if [ "${sess%.*}" -ge 0 ] 2>/dev/null; then
+  left=""
+  if [ "$reset" -gt 0 ] 2>/dev/null; then
+    secs=$(( reset - $(date +%s) )); [ "$secs" -lt 0 ] && secs=0
+    left=" ($(( secs/3600 ))h$(( secs%3600/60 ))m)"
+  fi
+  meter="$meter · 5h ${sess%.*}%$left"
+fi
 
 if git -C "$cwd" rev-parse --git-dir >/dev/null 2>&1; then
   branch=$(git -C "$cwd" -c core.fsmonitor=false symbolic-ref --short HEAD 2>/dev/null || echo detached)
