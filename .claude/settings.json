@@ -96,19 +96,19 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bash -c 'input=$(cat); cwd=$(echo \"$input\" | jq -r \".workspace.current_dir\"); dir=$(basename \"$(dirname \"$cwd\")\")/$(basename \"$cwd\"); remaining=$(echo \"$input\" | jq -r \".context_window.context_left_until_compact_percentage // empty\"); if [ -n \"$remaining\" ]; then ctx_info=$(printf \"\\033[0;33m[ctx:%d%%]\\033[0m \" \"${remaining%.*}\"); else ctx_info=\"\"; fi; if git -C \"$cwd\" rev-parse --git-dir >/dev/null 2>&1; then branch=$(git -C \"$cwd\" -c core.useBuiltinFSMonitor=false -c core.fsmonitor=false symbolic-ref --short HEAD 2>/dev/null || echo \"detached\"); if ! git -C \"$cwd\" -c core.useBuiltinFSMonitor=false -c core.fsmonitor=false diff --quiet 2>/dev/null || ! git -C \"$cwd\" -c core.useBuiltinFSMonitor=false -c core.fsmonitor=false diff --cached --quiet 2>/dev/null; then status=\" \u2717\"; else status=\"\"; fi; git_info=$(printf \" \\033[1;34mgit:(\\033[0;31m%s\\033[1;34m)%s\\033[0m\" \"$branch\" \"$status\"); else git_info=\"\"; fi; printf \"%s\\033[1;32m\u279c\\033[0m  \\033[0;36m%s\\033[0m%s\" \"$ctx_info\" \"$dir\" \"$git_info\"'"
+    "command": "bash ~/.claude/statusline.sh"
   },
   "enabledPlugins": {
-    "context7@claude-plugins-official": true,
+    "context7@claude-plugins-official": false,
     "ralph-loop@claude-plugins-official": false,
-    "frontend-design@claude-plugins-official": true,
-    "github@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": false,
+    "github@claude-plugins-official": false,
     "typescript-lsp@claude-plugins-official": true,
     "security-guidance@claude-plugins-official": true,
-    "claude-md-management@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": false,
     "rust-analyzer-lsp@claude-plugins-official": true,
     "caveman@caveman": true,
-    "notion@claude-plugins-official": true,
+    "notion@claude-plugins-official": false,
     "ponytail@ponytail": true
   },
   "extraKnownMarketplaces": {
