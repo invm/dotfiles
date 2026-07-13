@@ -2,7 +2,7 @@
 # Claude Code status line: ctx tokens/% + 5h session limit, then dir + git.
 input=$(cat)
 cwd=$(echo "$input" | jq -r '.workspace.current_dir')
-dir=$(basename "$cwd")
+dir="$(basename "$(dirname "$cwd")")/$(basename "$cwd")"
 
 read -r used pct sess < <(echo "$input" | jq -r '[
   ((.context_window.total_input_tokens // 0) + (.context_window.total_output_tokens // 0)),
