@@ -57,7 +57,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "claude-fable-5[1m]",
+  "model": "opus[1m]",
   "disableClaudeAiConnectors": true,
   "disableBundledSkills": true,
   "hooks": {
@@ -113,7 +113,8 @@
     "rust-analyzer-lsp@claude-plugins-official": true,
     "caveman@caveman": true,
     "notion@claude-plugins-official": false,
-    "ponytail@ponytail": true
+    "ponytail@ponytail": true,
+    "ast-grep@ast-grep-marketplace": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -126,6 +127,12 @@
       "source": {
         "source": "github",
         "repo": "DietrichGebert/ponytail"
+      }
+    },
+    "ast-grep-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "ast-grep/agent-skill"
       }
     }
   },
