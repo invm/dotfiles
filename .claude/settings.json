@@ -37,13 +37,26 @@
       "Bash(./scripts/ci-status.sh *)",
       "Bash(scripts/ci-status.sh *)"
     ],
+    "deny": [
+      "EnterPlanMode",
+      "ExitPlanMode",
+      "DesignSync",
+      "NotebookEdit",
+      "SendMessage",
+      "PushNotification",
+      "RemoteTrigger",
+      "ReportFindings",
+      "ScheduleWakeup",
+      "AskUserQuestion",
+      "CronCreate",
+      "CronDelete",
+      "CronList"
+    ],
     "defaultMode": "auto"
   },
   "model": "opus[1m]",
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  },
+  "disableClaudeAiConnectors": true,
+  "disableBundledSkills": true,
   "hooks": {
     "Notification": [
       {
@@ -76,20 +89,12 @@
             "command": "\"$HOME\"/.claude/hooks/rtk-rewrite.sh"
           }
         ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "prompt",
-            "if": "Bash(git commit*)",
-            "prompt": "This command is about to run a git commit. If it creates a commit message (-m or -F or heredoc), verify the message subject follows Conventional Commits: <type>(<optional scope>): <subject>, where type is one of feat, fix, chore, refactor, test, docs, style, perf, build, ci, revert. Fail with a reason naming the correct format if it does not. Pass if the command does not set a message (e.g. --amend --no-edit, merge continuation). $ARGUMENTS",
-            "statusMessage": "Checking commit message convention"
-          }
-        ]
       }
     ]
   },
+  "disableRemoteControl": true,
+  "disableWorkflows": true,
+  "disableArtifact": true,
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline.sh"
