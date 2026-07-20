@@ -95,7 +95,6 @@
       }
     ]
   },
-  "disableRemoteControl": true,
   "disableWorkflows": true,
   "disableArtifact": true,
   "statusLine": {
