@@ -2,6 +2,10 @@
   "env": {
     "DISABLE_TELEMETRY": "1"
   },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "permissions": {
     "allow": [
       "Bash(awk *)",
