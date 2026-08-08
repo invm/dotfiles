@@ -84,6 +84,16 @@
         ]
       }
     ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "date '+{\"systemMessage\":\"[%Y-%m-%d %H:%M:%S %Z]\",\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"[%Y-%m-%d %H:%M:%S %Z]\"}}'"
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Bash",
@@ -107,7 +117,7 @@
     "ralph-loop@claude-plugins-official": false,
     "frontend-design@claude-plugins-official": false,
     "github@claude-plugins-official": false,
-    "typescript-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": false,
     "security-guidance@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": false,
     "rust-analyzer-lsp@claude-plugins-official": true,
