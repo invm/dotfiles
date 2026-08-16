@@ -51,14 +51,13 @@
       "RemoteTrigger",
       "ReportFindings",
       "ScheduleWakeup",
-      "AskUserQuestion",
       "CronCreate",
       "CronDelete",
       "CronList"
     ],
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
+  "model": "claude-fable-5[1m]",
   "disableClaudeAiConnectors": true,
   "disableBundledSkills": true,
   "hooks": {
@@ -106,8 +105,12 @@
       }
     ]
   },
+  "worktree": {
+    "baseRef": "fresh"
+  },
   "disableWorkflows": true,
   "disableArtifact": true,
+  "workflowKeywordTriggerEnabled": false,
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline.sh"
@@ -152,5 +155,6 @@
   "skipWorkflowUsageWarning": true,
   "theme": "dark-ansi",
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "autoCompactWindow": 200000
 }

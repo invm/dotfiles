@@ -1,6 +1,7 @@
 # Global Preferences
 
 - No assumptions. Ask clarifying questions instead.
+- If prompt contains questions, answer them FIRST, then start any task. Never skip questions to begin work.
 - Flag security issues and obvious performance pitfalls.
 - End each plan with unresolved questions, if any.
 - Incremental steps, not one giant response.
