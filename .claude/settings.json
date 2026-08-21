@@ -150,11 +150,13 @@
     }
   },
   "effortLevel": "medium",
+  "autoCompactWindow": 200000,
   "tui": "default",
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
   "theme": "dark-ansi",
+  "editorMode": "vim",
+  "preferredNotifChannel": "auto",
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true,
-  "autoCompactWindow": 200000
+  "skipAutoPermissionPrompt": true
 }
