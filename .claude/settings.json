@@ -155,7 +155,7 @@
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
   "theme": "dark-ansi",
-  "editorMode": "vim",
+  "editorMode": "normal",
   "preferredNotifChannel": "auto",
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true
