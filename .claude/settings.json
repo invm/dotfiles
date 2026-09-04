@@ -57,7 +57,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "claude-fable-5[1m]",
+  "model": "claude-fable-5-1[1m]",
   "disableClaudeAiConnectors": true,
   "disableBundledSkills": true,
   "hooks": {
@@ -94,6 +94,15 @@
       }
     ],
     "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "perl \"$HOME\"/.claude/hooks/no-comments.pl"
+          }
+        ]
+      },
       {
         "matcher": "Bash",
         "hooks": [
