@@ -1,5 +1,5 @@
-scripts
+Brewfile
 .git
 .gitignore
-^/install/*
+^/install.sh
 README.md

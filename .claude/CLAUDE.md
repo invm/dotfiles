@@ -13,3 +13,4 @@
 - If user reports "X broke after my change," that change is hypothesis #1.
   Don't blame infra/build/timeouts until ruled out.
 - Say "I haven't verified this yet" instead of presenting a guess as fact.
+- Use `rg`, never `grep`.

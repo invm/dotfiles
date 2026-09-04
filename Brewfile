@@ -1,0 +1,32 @@
+# core
+brew "stow"
+brew "zsh"
+brew "zsh-autosuggestions"
+brew "zsh-completions"
+brew "zsh-syntax-highlighting"
+brew "gnu-sed"
+brew "wget"
+brew "jq"
+brew "yq"
+brew "rtk"
+
+# editors, terminal
+brew "neovim"
+brew "vim"
+brew "tmux"
+cask "wezterm"
+
+# cli tools
+brew "eza"
+brew "fzf"
+brew "bat"
+brew "ripgrep"
+brew "fd"
+brew "zoxide"
+brew "tree"
+brew "htop"
+brew "btop"
+brew "dust"
+brew "tldr"
+brew "scc"
+brew "lazygit"
