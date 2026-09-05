@@ -29,3 +29,6 @@ git_clone_folder() {
 	git sparse-checkout set --no-cone "$folder"
 	git checkout
 }
+
+# ghostty cask ships no binary symlink; app bundle only
+alias ghostty="/Applications/Ghostty.app/Contents/MacOS/ghostty"

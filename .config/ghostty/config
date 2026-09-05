@@ -5,10 +5,10 @@ macos-option-as-alt = true
 window-height = 120
 window-width = 220
 font-family = ComicShannsMono Nerd Font
-font-size = 14
+font-size = 15
 window-padding-x = 0
 window-padding-y = 0
-theme = Bluloco Dark
+theme = Abernathy
 
 # opt+left/right = word jump
 keybind = alt+left=text:\x1bb

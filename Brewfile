@@ -15,6 +15,7 @@ brew "neovim"
 brew "vim"
 brew "tmux"
 cask "wezterm"
+cask "ghostty"
 
 # cli tools
 brew "eza"
