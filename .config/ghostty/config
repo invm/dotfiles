@@ -1,0 +1,18 @@
+# https://ghostty.org/docs/config/reference
+window-decoration = auto
+macos-titlebar-style = hidden
+macos-option-as-alt = true
+window-height = 120
+window-width = 220
+font-family = ComicShannsMono Nerd Font
+font-size = 14
+window-padding-x = 0
+window-padding-y = 0
+theme = Bluloco Dark
+
+# opt+left/right = word jump
+keybind = alt+left=text:\x1bb
+keybind = alt+right=text:\x1bf
+# opt+h/l = left/right
+keybind = alt+h=text:\x1b[D
+keybind = alt+l=text:\x1b[C
