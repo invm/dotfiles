@@ -32,3 +32,13 @@ git_clone_folder() {
 
 # ghostty cask ships no binary symlink; app bundle only
 alias ghostty="/Applications/Ghostty.app/Contents/MacOS/ghostty"
+
+alias c=cursor
+alias cl=clear
+alias cat=bat
+alias grep=rg
+alias ls=eza
+alias tf=terraform
+alias tg=terragrunt
+alias wpod="kubectl get pods -A --no-headers | fzf | awk '{ print \$2 }' | xargs -I {} sh -c 'watch \"kubectl get pods -A | grep {} \"'"
+alias lpod="kubectl get pods --no-headers | fzf | awk '{ print \$1 }' | xargs -I {} sh -c 'kubectl logs -f {}'"
