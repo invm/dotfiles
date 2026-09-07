@@ -14,3 +14,4 @@
   Don't blame infra/build/timeouts until ruled out.
 - Say "I haven't verified this yet" instead of presenting a guess as fact.
 - Use `rg`, never `grep`.
+- No markdown blockquotes it output

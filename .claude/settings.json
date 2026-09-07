@@ -29,7 +29,6 @@
       "Bash(stat *)",
       "Bash(du *)",
       "Bash(test *)",
-      "Bash(xargs *)",
       "Bash(date *)",
       "Bash(which *)",
       "Bash(ps *)",
@@ -38,7 +37,6 @@
       "Bash(file *)",
       "Bash(realpath *)",
       "Bash(readlink *)",
-      "Bash(chmod *)",
       "Bash(./scripts/ci-status.sh *)",
       "Bash(scripts/ci-status.sh *)"
     ],
@@ -112,6 +110,15 @@
             "command": "\"$HOME\"/.claude/hooks/rtk-rewrite.sh"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME\"/.claude/hooks/strip-comments.py"
+          }
+        ]
       }
     ]
   },
@@ -137,7 +144,8 @@
     "caveman@caveman": true,
     "notion@claude-plugins-official": false,
     "ponytail@ponytail": true,
-    "ast-grep@ast-grep-marketplace": true
+    "ast-grep@ast-grep-marketplace": true,
+    "atlassian@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -167,6 +175,7 @@
   "theme": "dark-ansi",
   "editorMode": "normal",
   "preferredNotifChannel": "auto",
+  "autoCompactEnabled": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true
 }
