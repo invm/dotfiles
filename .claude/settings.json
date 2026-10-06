@@ -56,7 +56,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
+  "model": "fable",
   "disableClaudeAiConnectors": true,
   "disableBundledSkills": true,
   "hooks": {
@@ -144,7 +144,8 @@
     "ponytail@ponytail": true,
     "ast-grep@ast-grep-marketplace": true,
     "atlassian@claude-plugins-official": true,
-    "posthog@claude-plugins-official": true
+    "posthog@claude-plugins-official": true,
+    "mattpocock-skills@mattpocock": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -164,6 +165,12 @@
         "source": "github",
         "repo": "ast-grep/agent-skill"
       }
+    },
+    "mattpocock": {
+      "source": {
+        "source": "github",
+        "repo": "mattpocock/skills"
+      }
     }
   },
   "effortLevel": "medium",
@@ -181,5 +188,8 @@
   "preferredNotifChannel": "auto",
   "autoCompactEnabled": true,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "env": {
+    "CLAUDE_CODE_PLUGIN_DIRS": "~/.claude/mods/gut-comments"
+  }
 }
