@@ -3,6 +3,7 @@ ZSH_THEME="robbyrussell"
 plugins=(git)
 fpath+=${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-completions/src
 source $ZSH/oh-my-zsh.sh
+[[ $TERM_PROGRAM == rex ]] && source /Applications/Ghostty.app/Contents/Resources/ghostty/shell-integration/zsh/ghostty-integration
 
 eval "$(/opt/homebrew/bin/brew shellenv 2>/dev/null || /usr/local/bin/brew shellenv)"
 FPATH="$HOMEBREW_PREFIX/share/zsh-completions:$FPATH"
