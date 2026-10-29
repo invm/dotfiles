@@ -28,3 +28,6 @@ export PATH="$PNPM_HOME:$PATH"
 
 # machine-specific, not in repo
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
+
+# strix
+export PATH=/Users/michael/.strix/bin:$PATH
