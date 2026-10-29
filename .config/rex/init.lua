@@ -1,3 +1,19 @@
+local copy_mode_script = [[
+local f = io.open(vim.fn.argv(0), "rb")
+local data = f:read("*a")
+f:close()
+local function render()
+  local old = vim.api.nvim_get_current_buf()
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_win_set_buf(0, buf)
+  vim.api.nvim_chan_send(vim.api.nvim_open_term(buf, {}), data)
+  vim.api.nvim_buf_delete(old, { force = true })
+  vim.defer_fn(function() vim.cmd("normal! G") end, 50)
+end
+render()
+vim.api.nvim_create_autocmd("VimResized", { callback = render })
+]]
+
 rex.action{
   name  = "copy_mode",
   title = "Copy Mode (scrollback in nvim)",
@@ -8,6 +24,10 @@ rex.action{
     local path = os.tmpname() .. ".vt"
     local f = assert(io.open(path, "w"))
     f:write(r.content or "")
+    f:close()
+    local script = os.tmpname() .. ".lua"
+    f = assert(io.open(script, "w"))
+    f:write(copy_mode_script)
     f:close()
     local _, err2 = rex.session.new_layer{
       bounds = { 0, 0, 1, 1 },
@@ -20,8 +40,7 @@ rex.action{
             "-c", "set clipboard=unnamedplus nonumber laststatus=0 noshowmode noruler shortmess+=F scrollback=100000",
             "-c", "nnoremap q :q!<CR>", "-c", "vnoremap y y:q!<CR>",
             "-c", "nnoremap <C-k> y$:q!<CR>",
-            "-c", "lua local f=io.open(vim.fn.argv(0),'rb') local d=f:read('*a') f:close() vim.cmd('enew') local c=vim.api.nvim_open_term(0,{}) vim.api.nvim_chan_send(c,d) vim.defer_fn(function() vim.cmd('normal! G') end,50)",
-            path },
+            "-S", script, path },
         },
       },
     }
