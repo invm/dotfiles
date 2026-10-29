@@ -1,4 +1,7 @@
 local copy_mode_script = [[
+vim.api.nvim_set_hl(0, "CopyModeTag", { bold = true, fg = "#1e1e2e", bg = "#f9e2af", ctermfg = 0, ctermbg = 11 })
+vim.api.nvim_set_hl(0, "WinBar", { fg = "#cdd6f4", bg = "#313244", ctermfg = 15, ctermbg = 236 })
+vim.o.winbar = "%#CopyModeTag# COPY MODE %#WinBar#  q quit · v select · y yank · C-k yank to EOL"
 local f = io.open(vim.fn.argv(0), "rb")
 local data = f:read("*a")
 f:close()
