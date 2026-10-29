@@ -3,9 +3,9 @@ rex.action{
   title = "Copy Mode (scrollback in nvim)",
   run   = function(ctx, args)
     local r, err = rex.block.call("com.superlogical.terminal", "format",
-      { block_id = ctx.block_id, format = "text", trim = true })
+      { block_id = ctx.block_id, format = "vt", trim = true })
     if r == nil then error(err, 0) end
-    local path = os.tmpname() .. ".txt"
+    local path = os.tmpname() .. ".vt"
     local f = assert(io.open(path, "w"))
     f:write(r.content or "")
     f:close()
@@ -16,11 +16,12 @@ rex.action{
         flavor  = "com.superlogical.terminal.shell",
         options = {
           shell = "none",
-          command = { "/opt/homebrew/bin/nvim", "--clean", "-R",
-            "-c", "set clipboard=unnamedplus nonumber laststatus=0 noshowmode noruler shortmess+=F",
+          command = { "/opt/homebrew/bin/nvim", "--clean",
+            "-c", "set clipboard=unnamedplus nonumber laststatus=0 noshowmode noruler shortmess+=F scrollback=100000",
             "-c", "nnoremap q :q!<CR>", "-c", "vnoremap y y:q!<CR>",
             "-c", "nnoremap <C-k> y$:q!<CR>",
-            "+$", path },
+            "-c", "lua local f=io.open(vim.fn.argv(0),'rb') local d=f:read('*a') f:close() vim.cmd('enew') local c=vim.api.nvim_open_term(0,{}) vim.api.nvim_chan_send(c,d) vim.defer_fn(function() vim.cmd('normal! G') end,50)",
+            path },
         },
       },
     }
