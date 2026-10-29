@@ -147,8 +147,7 @@
     "atlassian@claude-plugins-official": false,
     "posthog@claude-plugins-official": false,
     "mattpocock-skills@mattpocock": true,
-    "cc-plugin-you-should-know@builtin": true,
-    "watermarks-remover@watermarks-remover": true
+    "cc-plugin-you-should-know@builtin": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -173,12 +172,6 @@
       "source": {
         "source": "github",
         "repo": "mattpocock/skills"
-      }
-    },
-    "watermarks-remover": {
-      "source": {
-        "source": "github",
-        "repo": "guillaumemeyer/watermarks-remover"
       }
     }
   },
