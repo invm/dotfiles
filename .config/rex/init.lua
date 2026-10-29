@@ -91,3 +91,23 @@ rex.bind("ctrl+q>u", "client.mode.enter", { name = "scroll" })
 for _, k in ipairs({ "k", "up" }) do rex.bind("scroll/" .. k, "scroll_step", { direction = "up" }) end
 for _, k in ipairs({ "j", "down" }) do rex.bind("scroll/" .. k, "scroll_step", { direction = "down" }) end
 rex.bind("scroll/q", "client.mode.exit")
+
+local rex_cli = os.getenv("HOME") .. "/Library/Application Support/com.superlogical.rex/RexServer/Versions/Current/Rex Server.app/Contents/MacOS/rex"
+local resize_exit
+rex.action{
+  name = "resize_repeat",
+  title = "Resize Pane (repeatable)",
+  args = { direction = "string", enter = "boolean?" },
+  run = function(ctx, args)
+    rex.invoke("vim_rex_resize", { direction = args.direction, amount = 2 })
+    if args.enter then rex.client.queue("client.mode.enter", { name = "resize" }) end
+    if resize_exit then resize_exit:kill() end
+    resize_exit = rex.exec.start({ "/bin/sh", "-c", 'sleep 0.3 && exec "$0" do client.mode.exit', rex_cli })
+  end,
+}
+
+rex.mode("resize")
+for k, d in pairs({ h = "left", j = "down", k = "up", l = "right" }) do
+  rex.bind("ctrl+q>shift+" .. k, "resize_repeat", { direction = d, enter = true })
+  rex.bind("resize/shift+" .. k, "resize_repeat", { direction = d })
+end
