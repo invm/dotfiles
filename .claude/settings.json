@@ -38,7 +38,8 @@
       "Bash(realpath *)",
       "Bash(readlink *)",
       "Bash(./scripts/ci-status.sh *)",
-      "Bash(scripts/ci-status.sh *)"
+      "Bash(scripts/ci-status.sh *)",
+      "mcp__posthog"
     ],
     "deny": [
       "EnterPlanMode",
@@ -56,7 +57,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "fable",
+  "model": "opus",
   "disableClaudeAiConnectors": true,
   "disableBundledSkills": true,
   "hooks": {
@@ -87,7 +88,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "date '+{\"systemMessage\":\"[%Y-%m-%d %H:%M:%S %Z]\",\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"[%Y-%m-%d %H:%M:%S %Z]\"}}'"
+            "command": "b=$(pmset -g batt | grep -o '[0-9]*%' | head -1 | tr -d %); date \"+{\\\"systemMessage\\\":\\\"[%Y-%m-%d %H:%M:%S %Z] 🔋$b%%\\\",\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"UserPromptSubmit\\\",\\\"additionalContext\\\":\\\"[%Y-%m-%d %H:%M:%S %Z] battery $b%%\\\"}}\""
           }
         ]
       }
@@ -133,9 +134,9 @@
     "command": "bash ~/.claude/statusline.sh"
   },
   "enabledPlugins": {
-    "context7@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true,
-    "github@claude-plugins-official": true,
+    "context7@claude-plugins-official": false,
+    "frontend-design@claude-plugins-official": false,
+    "github@claude-plugins-official": false,
     "security-guidance@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": false,
     "rust-analyzer-lsp@claude-plugins-official": true,
@@ -143,9 +144,11 @@
     "notion@claude-plugins-official": false,
     "ponytail@ponytail": true,
     "ast-grep@ast-grep-marketplace": true,
-    "atlassian@claude-plugins-official": true,
-    "posthog@claude-plugins-official": true,
-    "mattpocock-skills@mattpocock": true
+    "atlassian@claude-plugins-official": false,
+    "posthog@claude-plugins-official": false,
+    "mattpocock-skills@mattpocock": true,
+    "cc-plugin-you-should-know@builtin": true,
+    "watermarks-remover@watermarks-remover": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -171,6 +174,12 @@
         "source": "github",
         "repo": "mattpocock/skills"
       }
+    },
+    "watermarks-remover": {
+      "source": {
+        "source": "github",
+        "repo": "guillaumemeyer/watermarks-remover"
+      }
     }
   },
   "effortLevel": "medium",
@@ -187,9 +196,7 @@
   "editorMode": "normal",
   "preferredNotifChannel": "auto",
   "autoCompactEnabled": true,
+  "switchModelsOnFlag": true,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true,
-  "env": {
-    "CLAUDE_CODE_PLUGIN_DIRS": "~/.claude/mods/gut-comments"
-  }
+  "skipAutoPermissionPrompt": true
 }
