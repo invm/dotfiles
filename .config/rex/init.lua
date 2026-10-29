@@ -111,3 +111,7 @@ for k, d in pairs({ h = "left", j = "down", k = "up", l = "right" }) do
   rex.bind("ctrl+q>shift+" .. k, "resize_repeat", { direction = d, enter = true })
   rex.bind("resize/shift+" .. k, "resize_repeat", { direction = d })
 end
+
+for k, key in pairs({ h = "left", j = "down", k = "up", l = "right" }) do
+  rex.bind("opt+" .. k, "pane.send_key", { key = key })
+end
