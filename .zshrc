@@ -2,12 +2,13 @@ export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="robbyrussell"
 plugins=(git)
 fpath+=${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-completions/src
+[[ -z $HOMEBREW_PREFIX ]] && eval "$(/opt/homebrew/bin/brew shellenv 2>/dev/null || /usr/local/bin/brew shellenv)"
+FPATH="$HOMEBREW_PREFIX/share/zsh-completions:$FPATH"
+DISABLE_AUTO_UPDATE=true
+ZSH_DISABLE_COMPFIX=true
 source $ZSH/oh-my-zsh.sh
 [[ $TERM_PROGRAM == rex ]] && source /Applications/Ghostty.app/Contents/Resources/ghostty/shell-integration/zsh/ghostty-integration
 
-eval "$(/opt/homebrew/bin/brew shellenv 2>/dev/null || /usr/local/bin/brew shellenv)"
-FPATH="$HOMEBREW_PREFIX/share/zsh-completions:$FPATH"
-autoload -Uz compinit && compinit
 
 source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

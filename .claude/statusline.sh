@@ -1,12 +1,13 @@
 #!/bin/bash
-# Claude Code status line: ctx tokens/% + 5h + 7d limits, then dir + git.
+# Claude Code status line: ctx tokens/% + session cost + 5h/7d limits (subscription only), then dir + git.
 input=$(cat)
 cwd=$(echo "$input" | jq -r '.workspace.current_dir')
 dir="$(basename "$(dirname "$cwd")")/$(basename "$cwd")"
 
-read -r used pct s5 r5 s7 r7 < <(echo "$input" | jq -r '[
+read -r used pct cost s5 r5 s7 r7 < <(echo "$input" | jq -r '[
   ((.context_window.total_input_tokens // 0) + (.context_window.total_output_tokens // 0)),
   (.context_window.used_percentage // 0),
+  (.cost.total_cost_usd // 0),
   (.rate_limits.five_hour.used_percentage // -1),
   (.rate_limits.five_hour.resets_at // 0),
   (.rate_limits.seven_day.used_percentage // -1),
@@ -14,7 +15,7 @@ read -r used pct s5 r5 s7 r7 < <(echo "$input" | jq -r '[
 ] | @tsv')
 
 k=$(( used / 1000 ))
-meter="ctx ${k}k (${pct%.*}%)"
+meter="ctx ${k}k (${pct%.*}%) · $(printf '$%.2f' "$cost")"
 now=$(date +%s)
 limit() { # label used% resets_at
   [ "${2%.*}" -ge 0 ] 2>/dev/null || return

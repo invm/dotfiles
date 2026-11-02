@@ -52,7 +52,6 @@ rex.action{
 }
 rex.bind("ctrl+q>[", "copy_mode")
 
-package.path = os.getenv("HOME") .. "/.local/share/nvim/lazy/vim-rex-navigator/rex/?.lua;" .. package.path
 require("vim-rex-navigator").setup {
   focus_left = "ctrl+h", focus_down = "ctrl+j", focus_up = "ctrl+k", focus_right = "ctrl+l",
   move = false, resize = false, close = false,
