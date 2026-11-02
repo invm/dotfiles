@@ -15,3 +15,6 @@
 - Say "I haven't verified this yet" instead of presenting a guess as fact.
 - Use `rg`, never `grep`.
 - No markdown blockquotes it output
+- No redundant code comments. Never narrate what readable code does or justify a change
+  to the reviewer. Default: zero comments. Only exception: a real constraint the code
+  cannot express (non-obvious invariant, workaround with issue link, gotcha).
