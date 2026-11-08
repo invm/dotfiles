@@ -1,20 +1,13 @@
 # Global Preferences
 
-- No assumptions. Ask clarifying questions instead.
-- If prompt contains questions, answer them FIRST, then start any task. Never skip questions to begin work.
+- No assumptions. Ask clarifying questions.
+- Answer prompt questions FIRST, then start any task.
 - Flag security issues and obvious performance pitfalls.
 - End each plan with unresolved questions, if any.
-- Incremental steps, not one giant response.
-  After each step: 3-line summary, then pause for go-ahead.
-- When debugging: trace data flow through the whole chain before fixing;
-  fix root source, not symptoms.
-- Before stating ANY root cause, cite evidence inspected
-  (log lines, diff, command output). No evidence = not allowed to conclude.
-- If user reports "X broke after my change," that change is hypothesis #1.
-  Don't blame infra/build/timeouts until ruled out.
-- Say "I haven't verified this yet" instead of presenting a guess as fact.
-- Use `rg`, never `grep`.
-- No markdown blockquotes it output
-- No redundant code comments. Never narrate what readable code does or justify a change
-  to the reviewer. Default: zero comments. Only exception: a real constraint the code
-  cannot express (non-obvious invariant, workaround with issue link, gotcha).
+- Debugging: trace data flow through whole chain, fix root source not symptoms.
+- Cite inspected evidence (logs, diff, output) before stating any root cause. No evidence, no conclusion.
+- "X broke after my change": that change is hypothesis #1. Rule out before blaming infra/build/timeouts.
+- Say "I haven't verified this yet" instead of guessing as fact.
+- No markdown blockquotes in output.
+- Zero code comments by default. Exception: real constraint code can't express (invariant, workaround with issue link, gotcha).
+- Hard cutoff by default: no backward compat, shims, or intermediate stages unless asked.
