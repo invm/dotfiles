@@ -4,16 +4,23 @@ input=$(cat)
 cwd=$(echo "$input" | jq -r '.workspace.current_dir')
 dir="$(basename "$(dirname "$cwd")")/$(basename "$cwd")"
 
-read -r used pct cost s7 r7 < <(echo "$input" | jq -r '[
+win=$(jq -r '.autoCompactWindow // 0' ~/.claude/settings.json 2>/dev/null)
+read -r used pct size cost la lr s7 r7 < <(echo "$input" | jq -r '[
   ((.context_window.total_input_tokens // 0) + (.context_window.total_output_tokens // 0)),
   (.context_window.used_percentage // 0),
+  (.context_window.context_window_size // 0),
   (.cost.total_cost_usd // 0),
+  (.cost.total_lines_added // 0),
+  (.cost.total_lines_removed // 0),
   (.rate_limits.seven_day.used_percentage // -1),
   (.rate_limits.seven_day.resets_at // 0)
 ] | @tsv')
 
 k=$(( used / 1000 ))
-meter="ctx ${k}k (${pct%.*}%)"
+if [ "$win" -gt 0 ] && [ "$size" -gt "$win" ] 2>/dev/null; then pct=$(( ${pct%.*} * size / win )); fi
+p=${pct%.*}; f=$(( p > 100 ? 10 : p / 10 ))
+bar=$(printf '%*s' "$f" '' | sed 's/ /▓/g')$(printf '%*s' $(( 10 - f )) '' | sed 's/ /░/g')
+meter="ctx $bar ${k}k (${p}%)"
 now=$(date +%s)
 limit() { # label used% resets_at
   [ "${2%.*}" -ge 0 ] 2>/dev/null || return
@@ -27,11 +34,13 @@ limit() { # label used% resets_at
 }
 limit 7d "$s7" "$r7"
 [ "${s7%.*}" -ge 0 ] 2>/dev/null || meter="$meter · $(printf '$%.2f' "$cost")"
+[ "$la" -gt 0 ] || [ "$lr" -gt 0 ] 2>/dev/null && meter="$meter · +$la -$lr"
 
 if git -C "$cwd" rev-parse --git-dir >/dev/null 2>&1; then
   branch=$(git -C "$cwd" -c core.fsmonitor=false symbolic-ref --short HEAD 2>/dev/null || echo detached)
   if ! git -C "$cwd" -c core.fsmonitor=false diff --quiet 2>/dev/null || ! git -C "$cwd" -c core.fsmonitor=false diff --cached --quiet 2>/dev/null; then st=" ✗"; else st=""; fi
-  git_info=$(printf " \033[1;34mgit:(\033[0;31m%s\033[1;34m)%s\033[0m" "$branch" "$st")
+  [ "$(git -C "$cwd" rev-parse --absolute-git-dir)" != "$(cd "$cwd" && realpath "$(git rev-parse --git-common-dir)")" ] && wt=" wt:$(basename "$(git -C "$cwd" rev-parse --show-toplevel)")"
+  git_info=$(printf " \033[1;34mgit:(\033[0;31m%s\033[1;34m)%s\033[0;35m%s\033[0m" "$branch" "$st" "$wt")
 fi
 
 printf "\033[1;32m➜\033[0m  \033[0;36m%s\033[0m%s  \033[0;90m%s\033[0m" "$dir" "$git_info" "$meter"

@@ -11,3 +11,6 @@
 - No markdown blockquotes in output.
 - Zero code comments by default. Exception: real constraint code can't express (invariant, workaround with issue link, gotcha).
 - Hard cutoff by default: no backward compat, shims, or intermediate stages unless asked.
+- Heavy triage (log pulls, broad searches, failure analysis) goes to subagents; main thread keeps verdicts only.
+- State a status caveat once. If the user asserts state (merged, deployed, closed), take it as fact.
+- On bare repos, work on worktree, on regular prefer master unless specified otherwise
