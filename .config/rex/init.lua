@@ -114,3 +114,17 @@ end
 for k, key in pairs({ h = "left", j = "down", k = "up", l = "right" }) do
   rex.bind("opt+" .. k, "pane.send_key", { key = key })
 end
+
+local last_session
+rex.action{
+  name = "last_session",
+  title = "Last Session",
+  run = function(ctx)
+    local target = last_session
+    last_session = ctx.session_id
+    if target and target ~= ctx.session_id then
+      rex.client.queue("session.select", { session_id = target })
+    end
+  end,
+}
+rex.bind("opt+`", "last_session")
