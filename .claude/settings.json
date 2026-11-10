@@ -99,7 +99,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$HOME\"/.claude/hooks/rtk-rewrite.sh"
+            "command": "rtk hook claude"
           }
         ]
       }
@@ -174,5 +174,6 @@
   "autoCompactEnabled": true,
   "switchModelsOnFlag": true,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "autoMemoryEnabled": false
 }
