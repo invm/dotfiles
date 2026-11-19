@@ -11,6 +11,8 @@
 - Verify through the project's supported harness. If it's blocked, stop and report. Never call a substitute equivalent. Subagent briefs name that harness and offer no fallback.
 - No markdown blockquotes in output.
 - Zero code comments by default. Exception: real constraint code can't express (invariant, workaround with issue link, gotcha).
+- Never create AWS resources without asking.
+- No secret-shaped test data.
 - Hard cutoff by default: no backward compat, shims, or intermediate stages unless asked.
 - Hard cutoff never covers removing user-visible behavior or deleting tests. Each such removal needs my explicit approval, asked before coding, and the PR lists it under "## Removed behavior" with what replaces it.
 - Heavy triage (log pulls, broad searches, failure analysis) goes to subagents; main thread keeps verdicts only.

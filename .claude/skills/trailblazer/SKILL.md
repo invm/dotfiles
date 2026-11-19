@@ -190,10 +190,16 @@ result. Answer the user's questions before continuing.
 ## Done
 
 The map is done when every ticket is merged and closed, the map issue is
-closed, no sub-issue is attached that was not worked, and the final report is
-posted.
+closed, no sub-issue is attached that was not worked, the final report is
+posted, and the user has approved the map in writing. Never close the map
+issue or declare it finished before that approval. Post the report, ask for
+approval, and wait.
 
-Final report: merged PRs and closed tickets; what was deployed where; what the
+Final report: what was deleted (code, tests, user-visible behavior, resources);
+what behavior changed, as the user sees it; what validations were done, each
+with a link to its evidence (PR, CI run, command output, screenshot, plan
+output), and every claim in the report links to its evidence or is labelled
+"not verified"; merged PRs and closed tickets; what was deployed where; what the
 other environments still need; what was not verified; incidents; every
 leftover with its fate (fixed in PR #n, ticket #n, needs your decision); open
 decisions; cost; confirmation that worktrees, branches, temp files and test
