@@ -28,6 +28,7 @@
 - Flag security issues and obvious performance pitfalls.
 - Never create AWS resources without asking.
 - Touch only the environments the user is working on. Plan or check another environment only when the user asks.
+- Before starting work, flag when a ticket's real cost dwarfs its ask: running from source instead of images, forking or patching a third-party app, new credentials on a server, or a large install change. Say the cost and risk in plain words, recommend, and wait for a yes. Blanket "make it work" approval does not cover it.
 
 ## Delegation
 

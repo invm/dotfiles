@@ -29,6 +29,9 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
    - which environments you may deploy to, and whether they are disposable
    - tickets to skip
    - cost and real-run budget
+   - the map's goal and how "done" is checked: a measured number ("demo suite
+     under 160 s") or a feature acceptance ("a member sees egress on the run
+     page, verified on staging"). Every ticket is checked against it
 3. After that, do not stop to ask. For any decision the tickets leave open, take
    the simplest default, record it under "Decisions so far" on the map issue and
    in the PR body, and move on.
@@ -38,7 +41,9 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
 
 ## Models and load
 
-- Build rounds and verification rounds: Opus subagents.
+- Build rounds and verification rounds: Sonnet subagents.
+- Opus is slow: use it rarely, only for a review round on a risky diff
+  (security, schema, run pipeline), never for building.
 - Lookups (where is X, what calls Y, read this log): Haiku subagents.
 - You review and decide. You do not build.
 - At most two heavy agents at once (builds, test suites, dev servers). Full
@@ -61,11 +66,16 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
    **deploy path**: every workflow, role and policy that will create, update or
    read the new resource. Confirm from plan output or IAM policy that each one
    has access. Write down what the other environments will need.
-5. **Verification round**, always a separate agent from the builder, against
-   the real environment. Aim it at the build agent's "not verified" list. Give
-   it a budget (runs, hosts, money). Passing unit tests have missed a stale
-   image, an 80-second delay, an open port and a missing IAM statement; only a
-   real run found them.
+5. **Verification round**, sized by ticket type:
+   - Runtime, infra, security, or a change to the run pipeline: a separate
+     agent, never the builder, against the real environment. Aim it at the
+     builder's "not verified" list. Give it a budget (runs, hosts, money).
+     Passing unit tests have missed a stale image, an 80-second delay, an open
+     port and a missing IAM statement; only a real run found them.
+   - CLI, docs, small console or UI changes: no separate agent. The builder's
+     tests plus one claim you re-run yourself, plus screenshots for UI.
+   - When several merged tickets touch the same runtime path, one real run can
+     verify them together; name each ticket's check in the brief.
 6. Fix round if needed. Before merge: main branch merged in, PR body matches
    the final diff, UI PRs carry their screenshots, every leftover from this
    ticket has a fate. Then push, PR, CI green, merge, confirm the issue closed,
@@ -138,15 +148,32 @@ return to an anonymous caller.
 A **leftover** is anything found during a ticket that the ticket did not ask
 for: a bug, a gap, a rough edge. Decide its fate the moment it is found:
 
-- **Small** (under about 50 lines, in code the ticket already touches or its
-  direct neighbours, no decision only the user can make): open a ticket for it
-  now, fix it in the same PR, and add `Closes #<new>` to the PR body and the
-  commit.
-- **Blocks the map**: open a ticket and fix it before the blocked ticket.
-- **Everything else**: open a ticket and put it on the leftovers list for the
-  user to place.
+- **Bug** (wrong result, failed run, security or data issue): open a ticket on
+  the map and fix it in its own PR.
+- **Blocks the map's goal**: open a ticket on the map and fix it before the
+  blocked ticket.
+- **Improvement**: open a ticket on the map with a gate (see "Gates"). Build it
+  only when its gate holds; otherwise it stays on the leftovers list.
+- **Everything else**: no ticket. One line in the leftovers list on the map
+  issue, with what it is and why it matters. The user places them at the end.
 
 Keep the list on the map issue from the first ticket, never rebuilt at the end.
+
+## Gates
+
+A gate is a condition on a ticket that must hold before it is built. Write it
+in the ticket as `Gate: <type>: <condition>`. Unmet or unknown means skip: put
+the ticket on the leftovers list, do not build it.
+
+| Gate | Condition | Checked by |
+|---|---|---|
+| Measure | A number crosses a threshold ("idle tail over 10 s") | A real run, receipt in the ticket |
+| Use case | A real suite or user hits it ("a suite with mixed parallel projects") | A named project, issue or repro |
+| After | Another ticket is merged ("after #794") | Its state |
+| Cost | Diff stays small: no schema change, no new dependency, under ~200 lines | The build plan, before coding |
+| Owner | Needs the user's yes ("UI wording", "image size") | The user |
+
+Every ticket opened from a leftover gets a gate unless it is a bug.
 
 ## Every brief contains
 
@@ -188,6 +215,10 @@ result. Answer the user's questions before continuing.
   on it and tell the user what you found.
 
 ## Done
+
+When the map's goal is met, finish the tickets in flight, then post a status:
+goal met, and each open ticket with a recommendation (build, list, drop). Wait
+for the user before starting more.
 
 The map is done when every ticket is merged and closed, the map issue is
 closed, no sub-issue is attached that was not worked, the final report is
