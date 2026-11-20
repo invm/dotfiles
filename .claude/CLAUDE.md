@@ -6,6 +6,7 @@
 - Don't assume, ask.
 - End each plan with unresolved questions, if any.
 - No markdown blockquotes in output.
+- Flows and data are best explained visually, a table or a flow chart.
 
 ## Debugging & Evidence
 
