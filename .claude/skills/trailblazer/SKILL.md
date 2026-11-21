@@ -29,9 +29,9 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
    - which environments you may deploy to, and whether they are disposable
    - tickets to skip
    - cost and real-run budget
-   - the map's goal and how "done" is checked: a measured number ("demo suite
-     under 160 s") or a feature acceptance ("a member sees egress on the run
-     page, verified on staging"). Every ticket is checked against it
+   - the map's goal and how "done" is checked: a measured number ("page load
+     under 2 s") or a feature acceptance ("a user sees their export on the
+     settings page, verified on staging"). Every ticket is checked against it
 3. After that, do not stop to ask. For any decision the tickets leave open, take
    the simplest default, record it under "Decisions so far" on the map issue and
    in the PR body, and move on.
@@ -43,7 +43,7 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
 
 - Build rounds and verification rounds: Sonnet subagents.
 - Opus is slow: use it rarely, only for a review round on a risky diff
-  (security, schema, run pipeline), never for building.
+  (security, schema, release pipeline), never for building.
 - Lookups (where is X, what calls Y, read this log): Haiku subagents.
 - You review and decide. You do not build.
 - At most two heavy agents at once (builds, test suites, dev servers). Full
@@ -67,7 +67,7 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
    read the new resource. Confirm from plan output or IAM policy that each one
    has access. Write down what the other environments will need.
 5. **Verification round**, sized by ticket type:
-   - Runtime, infra, security, or a change to the run pipeline: a separate
+   - Runtime, infra, security, or a change to the release pipeline: a separate
      agent, never the builder, against the real environment. Aim it at the
      builder's "not verified" list. Give it a budget (runs, hosts, money).
      Passing unit tests have missed a stale image, an 80-second delay, an open
@@ -167,11 +167,11 @@ the ticket on the leftovers list, do not build it.
 
 | Gate | Condition | Checked by |
 |---|---|---|
-| Measure | A number crosses a threshold ("idle tail over 10 s") | A real run, receipt in the ticket |
-| Use case | A real suite or user hits it ("a suite with mixed parallel projects") | A named project, issue or repro |
-| After | Another ticket is merged ("after #794") | Its state |
+| Measure | A number crosses a threshold ("p95 latency over 500 ms") | A real run, receipt in the ticket |
+| Use case | A real suite or user hits it ("a customer with 10k records") | A named project, issue or repro |
+| After | Another ticket is merged ("after the schema ticket") | Its state |
 | Cost | Diff stays small: no schema change, no new dependency, under ~200 lines | The build plan, before coding |
-| Owner | Needs the user's yes ("UI wording", "image size") | The user |
+| Owner | Needs the user's yes ("UI wording", "pricing copy") | The user |
 
 Every ticket opened from a leftover gets a gate unless it is a bug.
 
