@@ -27,6 +27,8 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
      the answer is standing approval for this map, including tickets added to
      it later
    - which environments you may deploy to, and whether they are disposable
+   - whether you may run database migrations on each allowed environment, the
+     repo's migration command, and whether a backup or snapshot comes first
    - tickets to skip
    - cost and real-run budget
    - the map's goal and how "done" is checked: a measured number ("page load
@@ -66,6 +68,13 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
    **deploy path**: every workflow, role and policy that will create, update or
    read the new resource. Confirm from plan output or IAM policy that each one
    has access. Write down what the other environments will need.
+   **Migrations:** if the diff adds one, you run it, only on environments the
+   user allowed for migrations. Read the migration and its status/dry-run
+   output first. Take the backup if the user required one. Run the repo's
+   migration command, then confirm the status shows it applied and the
+   rollback path works or is named. A destructive migration (drop, rename,
+   type change, data rewrite) needs the user's explicit yes for that
+   migration, asked before you run it. Receipt: the command and its output.
 5. **Verification round**, sized by ticket type:
    - Runtime, infra, security, or a change to the release pipeline: a separate
      agent, never the builder, against the real environment. Aim it at the
@@ -181,7 +190,9 @@ Every ticket opened from a leftover gets a gate unless it is a bug.
 - Setup the fresh worktree needs, as commands.
 - The skills to use, by name.
 - Acceptance items, each needing a named test or a receipt.
-- Hard limits: no push, PR, merge, tag or stash; no pattern kills (`pkill`,
+- Hard limits: no push, PR, merge, tag or stash; no migration run against any
+  shared or deployed database (a local or disposable worktree database is
+  fine); no pattern kills (`pkill`,
   `killall`), stop only your own processes by PID; no restart of shared
   services; no teardown command that touches shared state; cloud access
   read-only except the writes named in the brief; nothing in environments other
