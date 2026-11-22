@@ -86,7 +86,8 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
    - When several merged tickets touch the same runtime path, one real run can
      verify them together; name each ticket's check in the brief.
 6. Fix round if needed. Before merge: main branch merged in, PR body matches
-   the final diff, UI PRs carry their screenshots, every leftover from this
+   the final diff, every PR with a user-visible change carries its
+   screenshots (see "UI tickets"), every leftover from this
    ticket has a fate. Then push, PR, CI green, merge, confirm the issue closed,
    delete the worktree and the local and remote branches.
 
@@ -150,7 +151,13 @@ return to an anonymous caller.
 - Walk a full journey from sign-in only when the ticket adds or changes a
   journey. Only then cover it end to end, by extending the spec that already
   walks that area if one exists.
-- Screenshots go on the PR before merge. Never commit screenshots.
+- Every PR that changes what a user sees carries screenshots on the PR
+  before merge: the changed screen, and before and after when the change
+  alters existing output. This includes changes outside component files
+  (masking, formatters, links, copy, server data the UI renders). Decide it
+  from the user-visible effect, not from which files the diff touches. Name
+  the screenshots in the build brief. A PR with no visible change says
+  "No UI change" in its body instead. Never commit screenshots.
 
 ## Leftovers
 
