@@ -21,12 +21,13 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
    dependency order. Before you mark two tickets parallel, grep for code both
    will touch (shared components, helpers, formatters). Overlap makes them
    sequential.
-2. Ask the user everything that could block you later, in one batch. Every
-   item gets asked:
-   - merge flow (default: push, PR with `Closes #n`, wait for CI, squash-merge);
-     the answer is standing approval for this map, including tickets added to
-     it later
-   - which environments you may deploy to, and whether they are disposable
+2. Standing approvals, never asked, valid for this map and tickets added to it
+   later:
+   - merge flow: push, PR with `Closes #n`, wait for CI, squash-merge
+   - deploy: dev and staging, freely. Any other environment (prod included)
+     is not allowed unless the user names it
+3. Ask the user everything else that could block you later, in one batch.
+   Every item gets asked:
    - whether you may run database migrations on each allowed environment, the
      repo's migration command, and whether a backup or snapshot comes first
    - tickets to skip
@@ -34,10 +35,10 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
    - the map's goal and how "done" is checked: a measured number ("page load
      under 2 s") or a feature acceptance ("a user sees their export on the
      settings page, verified on staging"). Every ticket is checked against it
-3. After that, do not stop to ask. For any decision the tickets leave open, take
+4. After that, do not stop to ask. For any decision the tickets leave open, take
    the simplest default, record it under "Decisions so far" on the map issue and
    in the PR body, and move on.
-4. The map issue is the session's memory. After every round, update it: ticket
+5. The map issue is the session's memory. After every round, update it: ticket
    status, decisions, the leftovers list. A fresh session must be able to resume
    from the issue alone, because your context will run out and get summarised.
 
