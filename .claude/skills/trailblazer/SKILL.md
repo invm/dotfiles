@@ -17,8 +17,8 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
 
 ## Before any work
 
-1. Read the map, every ticket on it, and the repo's CLAUDE.md. Build the
-   dependency order. Before you mark two tickets parallel, grep for code both
+1. Read the map with its comments (earlier decisions and reports), every
+   ticket on it, and the repo's CLAUDE.md. Build the dependency order. Before you mark two tickets parallel, grep for code both
    will touch (shared components, helpers, formatters). Overlap makes them
    sequential.
 2. Standing approvals, never asked, valid for this map and tickets added to it
@@ -26,21 +26,45 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
    - merge flow: push, PR with `Closes #n`, wait for CI, squash-merge
    - deploy: dev and staging, freely. Any other environment (prod included)
      is not allowed unless the user names it
-3. Ask the user everything else that could block you later, in one batch.
-   Every item gets asked:
-   - whether you may run database migrations on each allowed environment, the
-     repo's migration command, and whether a backup or snapshot comes first
-   - tickets to skip
-   - cost and real-run budget
-   - the map's goal and how "done" is checked: a measured number ("page load
-     under 2 s") or a feature acceptance ("a user sees their export on the
-     settings page, verified on staging"). Every ticket is checked against it
-4. After that, do not stop to ask. For any decision the tickets leave open, take
+3. **Resolve, then ask.** Find each answer yourself, in this order: the user's
+   message, the map issue and its comments, the tickets, the repo's CLAUDE.md
+   and docs, a command you can run. When none answers, take the default:
+
+   | Item | Default |
+   |---|---|
+   | Database migrations | Local and disposable databases only |
+   | Tickets to skip | None |
+   | Real runs | Up to 10 for the map. Spend one only when a check needs new data; otherwise reuse runs and data that already exist |
+   | Goal and how "done" is checked | The map's own goal text. Every ticket is checked against it |
+   | A reversible choice a ticket leaves open | The simplest option |
+
+   Ask only what is still open and is one of: irreversible, outward-facing
+   (publishing, a new credential, another repository, an environment outside
+   the standing approvals), a cost above the default, or marked in a ticket as
+   the owner's decision. One batch. When nothing qualifies, ask nothing.
+4. **Access check**, once, for the whole map. List what every ticket's build
+   and verification will need: sign-in on each environment, API keys and
+   tokens, the browser tool, the container runtime, third-party dashboards,
+   and owner-only steps (labels, secrets, app settings, plan or seat limits of
+   the test account). Test each one with a command, using the repo's recipes
+   and its environment check script if it has one. Then post one message: the
+   answers and defaults you resolved, and the list of what only the user can
+   do, each with the ticket it blocks. Start work without waiting for a reply.
+5. After that, do not stop to ask. For any decision the tickets leave open, take
    the simplest default, record it under "Decisions so far" on the map issue and
    in the PR body, and move on.
-5. The map issue is the session's memory. After every round, update it: ticket
+6. The map issue is the session's memory. After every round, update it: ticket
    status, decisions, the leftovers list. A fresh session must be able to resume
    from the issue alone, because your context will run out and get summarised.
+   After a summary, re-read the map issue before the next round. A statement
+   that is in the summary and not on the issue is a claim, not a fact.
+
+## Blocked tickets
+
+- **Blocked, nothing depends on it:** park it, write what unblocks it on the
+  map issue, tell the user once, continue with the other tickets.
+- **Blocking, other tickets depend on it:** finish the rounds in flight, then
+  stop the map and ask the user.
 
 ## Models and load
 
@@ -95,9 +119,12 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
 ## Before every round
 
 Run the **preflight**: the harness the round needs answers before you spend an
-agent on it. Dev server or staging returns 200, the database is migrated and
-seeded, the browser tool connects, setup steps the repo needs in a fresh
-worktree (port offset, building shared packages) are done or in the brief.
+agent on it. Dev server or staging returns 200, the database is migrated
+(again after every merge into the main branch) and seeded with the data the
+check reads, the sign-in the round uses works, the browser tool connects,
+setup steps the repo needs in a fresh worktree (port offset, building shared
+packages) are done or in the brief. A browser tool that lost its page or
+session gets a new session; that is not a blocker.
 A failed preflight is a blocker: fix it or tell the user. Do not send an agent
 into a broken harness, and do not send a second one into the same failure.
 
@@ -157,22 +184,29 @@ return to an anonymous caller.
   alters existing output. This includes changes outside component files
   (masking, formatters, links, copy, server data the UI renders). Decide it
   from the user-visible effect, not from which files the diff touches. Name
-  the screenshots in the build brief. A PR with no visible change says
+  the screenshots in the build brief. One locale, unless the ticket is about
+  translation. A PR with no visible change says
   "No UI change" in its body instead. Never commit screenshots.
 
 ## Leftovers
 
 A **leftover** is anything found during a ticket that the ticket did not ask
-for: a bug, a gap, a rough edge. Decide its fate the moment it is found:
+for: a bug, a gap, a rough edge. The moment it is found, write it on the map
+issue as `what | receipt | fate`. The receipt is a `file:line`, a command with
+its output, or a screenshot. A leftover without one is a suspicion: send a
+lookup agent to reproduce it, or drop it. It is never listed or reported bare.
 
-- **Bug** (wrong result, failed run, security or data issue): open a ticket on
-  the map and fix it in its own PR.
-- **Blocks the map's goal**: open a ticket on the map and fix it before the
-  blocked ticket.
-- **Improvement**: open a ticket on the map with a gate (see "Gates"). Build it
-  only when its gate holds; otherwise it stays on the leftovers list.
-- **Everything else**: no ticket. One line in the leftovers list on the map
-  issue, with what it is and why it matters. The user places them at the end.
+| Leftover | Fate |
+|---|---|
+| In the feature area the map works on: the same screen, endpoint or command, or the same bug in a sibling code path | Fix it in the ticket's PR. Too big for that PR: a ticket on the map, built in this run. No gate |
+| Bug outside that area (wrong result, failed run, security or data issue) | A ticket on the map, its own PR, built in this run |
+| Blocks the map's goal | A ticket on the map, built before the blocked ticket |
+| Needs the owner's decision (wording, pricing, removing behavior) | In the next status, with its receipt and your recommendation. Work continues |
+| Improvement outside that area | A ticket with a gate (see "Gates"), or one line on the leftovers list |
+
+"Pre-existing" is not a fate. The rest of a partial fix belongs to the ticket.
+An unticked acceptance item is unfinished work: the ticket stays open until
+the item is done or the user drops it.
 
 Keep the list on the map issue from the first ticket, never rebuilt at the end.
 
@@ -190,7 +224,7 @@ the ticket on the leftovers list, do not build it.
 | Cost | Diff stays small: no schema change, no new dependency, under ~200 lines | The build plan, before coding |
 | Owner | Needs the user's yes ("UI wording", "pricing copy") | The user |
 
-Every ticket opened from a leftover gets a gate unless it is a bug.
+Gates apply only to improvements outside the feature area the map works on.
 
 ## Every brief contains
 
@@ -207,19 +241,26 @@ Every ticket opened from a leftover gets a gate unless it is a bug.
   than the ones named.
 - Repo rules that agents break most: comment policy, commit format, no
   attribution lines, no infrastructure identifiers in committed files or client
-  responses.
+  responses, test data that no secret scanner can mistake for a credential.
+- Before reporting done, run the repo's pre-push hook or lint gate and fix
+  what it finds.
+- The real-run budget, and the rule to reuse existing runs and data first.
 - For cloud mechanics: look up current docs and cite them, do not rely on memory.
-- Report format: commits, a receipt per acceptance item, measured numbers,
-  fixes with root cause and receipt, not verified, leftovers with their fate,
-  open decisions, cost, cleanup done.
+- Report in two parts. The full report goes as a comment on the ticket (the
+  one write the brief always allows): commits, a receipt per acceptance item,
+  measured numbers, fixes with root cause and receipt, not verified, leftovers
+  as `what | receipt | fate`, open decisions, cost, cleanup done. What comes
+  back to you is at most 20 lines: result, the comment link, not verified,
+  leftovers, open decisions.
 
 ## Talking to the user
 
 Write for someone who has not read the code or the agent reports. Each item
 says what it is, why it matters to the product, and whether the user needs to
-act (yes or no). Name things by what the user sees, not by internal names.
+act (yes or no). Name things by what the user sees, not by internal names; a
+ticket number, version or measured number comes with what it means.
 Post a short status after every round without being asked, leading with the
-result. Answer the user's questions before continuing.
+result, and every 20 minutes while a round is still running. Answer the user's questions before continuing.
 
 ## Rules for you
 
@@ -230,6 +271,8 @@ result. Answer the user's questions before continuing.
 - Treat automated security findings as valid until you can show otherwise, and
   fix them before the real run.
 - When the user changes a decision mid-flight, fold it into the open ticket.
+- After you rewrite a branch's history, check every other open branch for the
+  same commit and fix them in the same pass.
 - If an agent has been silent for much longer than similar rounds took, check
   on it and tell the user what you found.
 
