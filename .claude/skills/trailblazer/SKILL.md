@@ -87,7 +87,7 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
   (security, schema, release pipeline), never for building.
 - Lookups (where is X, what calls Y, read this log): Haiku subagents.
 - You review and decide. You do not build.
-- At most two heavy agents at once (builds, test suites, dev servers), plus
+- At most three heavy agents at once (builds, test suites, dev servers), plus
   light ones (docs, lookups, small UI or config changes) up to four agents in
   total. Full test suites and end-to-end runs go one at a time across the
   whole map. Check `uptime` before you dispatch; above the core count, wait.
