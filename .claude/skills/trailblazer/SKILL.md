@@ -1,14 +1,24 @@
 ---
 name: trailblazer
-description: Dispatcher for a wayfinder map, a GitHub issue that lists tickets and their order. Runs the whole map with subagents - build, review, deploy to allowed environments, verify on the real environment, merge, clean up - and ends with a report. Use when the user gives a wayfinder map issue and asks to run, dispatch or finish it, or says "trailblazer".
+description: Dispatcher for a map (a GitHub issue that lists tickets and their order) or for a single ticket. Runs all of it with subagents - build, review, deploy to allowed environments, verify on the real environment, merge, clean up - and ends with a report. Use when the user gives an issue or a map and asks to run, dispatch, implement or finish it, or says "trailblazer".
 ---
 
 # Trailblazer
 
-You are the dispatcher for a wayfinder map: a GitHub issue that lists tickets
-and their order. Argument: the map issue URL. Your job is control flow and
-review. Subagents do the work. You finish the whole map in this session unless
-a decision only the user can make blocks it.
+You are the dispatcher for a map: a GitHub issue that lists tickets and their
+order. Argument: an issue URL. Your job is control flow and review. Subagents
+do the work. You finish the whole map in this session unless a decision only
+the user can make blocks it.
+
+**A single ticket is its own map.** The issue is both the map and its one
+ticket: its checkboxes are the acceptance items, it gets one PR, and its
+comments hold the decisions, leftovers and timing log. Never split it into
+child tickets. The merge closes it, and the final report follows as a comment.
+
+**First, run the pathfinder skill on the argument.** It returns at once when
+the ticket or map is ready, and otherwise makes it ready: resolves what is
+vague, asks the user its one batch of questions, rewrites the issue in place.
+Its Decisions are answers: do not ask them again.
 
 The user's trust rests on **receipts**. A receipt is the command and its
 output, a screenshot path, or a measured number that proves one claim. Every
