@@ -58,6 +58,10 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
    from the issue alone, because your context will run out and get summarised.
    After a summary, re-read the map issue before the next round. A statement
    that is in the summary and not on the issue is a claim, not a fact.
+7. Keep a **timing log** on the map issue, one line when each round ends:
+   `ticket | round | start | end | waited on`. Start and end come from `date`,
+   never from memory. "Waited on" names what held the ticket before the round
+   started: nothing, CI, an agent, the user's answer, a blocker.
 
 ## Blocked tickets
 
@@ -73,9 +77,15 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
   (security, schema, release pipeline), never for building.
 - Lookups (where is X, what calls Y, read this log): Haiku subagents.
 - You review and decide. You do not build.
-- At most two heavy agents at once (builds, test suites, dev servers). Full
-  test suites and end-to-end runs go one at a time across the whole map. Check
-  `uptime` before you dispatch; above the core count, wait.
+- At most two heavy agents at once (builds, test suites, dev servers), plus
+  light ones (docs, lookups, small UI or config changes) up to four agents in
+  total. Full test suites and end-to-end runs go one at a time across the
+  whole map. Check `uptime` before you dispatch; above the core count, wait.
+- **Keep the slots full.** While a ticket is unblocked and a slot is free,
+  dispatch it. A ticket waiting on CI, on verification or on the user frees
+  its slot: start the next ticket's build round then, not after the merge.
+  You end a turn with no agent running only when every remaining ticket is
+  blocked or the map is done.
 
 ## Loop per ticket
 
@@ -295,5 +305,10 @@ output), and every claim in the report links to its evidence or is labelled
 "not verified"; merged PRs and closed tickets; what was deployed where; what the
 other environments still need; what was not verified; incidents; every
 leftover with its fate (fixed in PR #n, ticket #n, needs your decision); open
-decisions; cost; confirmation that worktrees, branches, temp files and test
+decisions; cost; time from the timing log (total, per ticket, and the sum per
+"waited on" reason); confirmation that worktrees, branches, temp files and test
 resources are gone.
+
+When the user asks how fast past runs were, run `stats.py` from this skill's
+directory inside the project: one row per past run, read from the session
+files.
