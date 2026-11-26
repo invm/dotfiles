@@ -4,6 +4,7 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export CLAUDE_CODE_SUBAGENT_MODEL="claude-sonnet-4-6"
 export CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING=1
+export CLAUDE_CODE_PLUGIN_DIRS="$HOME/dotfiles/.claude/mods/copy-code:$HOME/dotfiles/.claude/mods/gut-comments"
 unset CLAUDE_CODE_OAUTH_TOKEN
 alias v=nvim
 alias pn=pnpm
