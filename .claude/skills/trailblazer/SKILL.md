@@ -99,7 +99,9 @@ the status under "Done": merge, rebuild as written, or drop.
 
 ## Models and load
 
-- Build rounds and verification rounds: Sonnet subagents.
+- Build rounds and verification rounds: Sonnet subagents. When the repo has
+  build agents (`.claude/agents/build-*.md`, one per domain), a build or fix
+  round goes to the agent of the domain it touches, never to a general agent.
 - Opus is slow: use it rarely, only for a review round on a risky diff
   (security, schema, release pipeline) or a ruling under "Disagreement",
   never for building.
@@ -107,7 +109,7 @@ the status under "Done": merge, rebuild as written, or drop.
 - You review and decide. You do not build.
 - At most three heavy agents at once (builds, test suites, dev servers), plus
   light ones (docs, lookups, small UI or config changes) up to four agents in
-  total. Full test suites and end-to-end runs go one at a time across the
+  total. The domain agents of one fan-out count one each. Full test suites and end-to-end runs go one at a time across the
   whole map. Check `uptime` before you dispatch; above the core count, wait.
 - **Keep the slots full.** While a ticket is unblocked and a slot is free,
   dispatch it. A ticket waiting on CI, on verification or on the user frees
@@ -117,19 +119,40 @@ the status under "Done": merge, rebuild as written, or drop.
 
 ## Loop per ticket
 
-1. Worktree and branch for the ticket. One agent per worktree, never two.
-2. **Build round.** The agent implements, tests, commits locally, and stops
-   before any push or infrastructure change. Its report lists what it did not
-   verify.
-3. **Your review.** Read the diff for scope creep, comments the repo forbids,
-   security rules, dead code, and unquestioned defaults (a page size of 10, a
-   cap of 100, a hidden field): each one is either justified in the PR body or
-   changed. Read it as the maintainer too: a new helper where grep finds an
-   existing one, a second way to do what the codebase does one way, a special
-   case for one caller, replaced code left in place, an abstraction, flag or
-   option with one user. Each one goes back in a fix round or is justified in
-   the PR body. Then **re-run one claim yourself**: the test command, the curl, the
-   plan. An agent's report is a claim; your re-run is the receipt.
+1. Worktree and branch for the ticket. One ticket per worktree, never two.
+2. **Build round.** List the domains the ticket touches: the path sets the
+   repo's build agents own. A repo without build agents has one domain.
+   - **One domain:** its agent implements, tests, commits locally, and stops
+     before any push or infrastructure change.
+   - **Two or more: contract, then fan-out.** The contract is every shape that
+     crosses a domain boundary: schema change, action or endpoint name with
+     input and output types, error codes, CLI flags and output, the terms and
+     copy a user reads. Post it as a comment on the ticket. Write it yourself
+     when the ticket and one lookup settle it; otherwise the agent of the
+     domain that owns the data writes it in a contract round and builds
+     nothing. Then dispatch one build agent per domain, all at once, in the
+     ticket's worktree. Each brief carries the contract link and the
+     fan-out rules under "Every brief contains".
+   - **Integrate.** When every domain agent has reported, run the lint gate and
+     the touched tests on the combined tree, then commit, one commit per
+     domain. A failure goes back as a fix round to the agent that owns the
+     failing path.
+   Every build report lists what it did not verify.
+3. **Your review.** Read the diff against the review checklist below: each
+   point is either justified in the PR body or goes back in a fix round. Then
+   **re-run one claim yourself**: the test command, the curl, the plan. An
+   agent's report is a claim; your re-run is the receipt.
+
+   **Review checklist.** The builder runs it on its own diff before it
+   reports; you run it again.
+   - Scope: every changed line traces to an acceptance item or a leftover the
+     report names.
+   - Repo rules: comments the repo forbids, security rules, dead code.
+   - Unquestioned defaults (a page size of 10, a cap of 100, a hidden field).
+   - Maintainer's read: a new helper where grep finds an existing one, a
+     second way to do what the codebase does one way, a special case for one
+     caller, replaced code left in place, an abstraction, flag or option with
+     one user.
 4. **Infrastructure.** You run plan, read it, and apply, only to environments
    the user allowed. Re-plan afterwards to confirm no drift. Then trace the
    **deploy path**: every workflow, role and policy that will create, update or
@@ -270,6 +293,8 @@ Gates apply only to improvements outside the feature area the map works on.
 
 ## Every brief contains
 
+- The agent description starts with the round kind: `Build`, `Fix`, `Verify`,
+  `Lookup` or `Contract`, then the ticket. `stats.py` counts rounds by it.
 - The ticket link, the files to read first, and what is already ruled out.
 - Setup the fresh worktree needs, as commands.
 - The skills to use, by name.
@@ -290,7 +315,17 @@ Gates apply only to improvements outside the feature area the map works on.
   attribution lines, no infrastructure identifiers in committed files or client
   responses, test data that no secret scanner can mistake for a credential.
 - Before reporting done, run the repo's pre-push hook or lint gate and fix
-  what it finds.
+  what it finds, then run the review checklist (paste it into the brief) on
+  your own diff and fix what it finds. For a server, API or CLI change, make
+  the one real call from "Verification" and put its output in the report.
+- In a fan-out, the fan-out rules: the paths you own, and you write nowhere
+  else. Build to the contract; when the code shows the contract is wrong, stop
+  and report it. Leave your changes uncommitted: no `git add`, commit, stash,
+  checkout or reset. Files several domains write (lockfile, translation
+  catalogs, generated files) have the one owner the brief names; ask for a
+  change in your report instead of editing them. An error in another domain's
+  paths is that agent's: report it, do not fix it. Run only the tests of the
+  files you touched; the brief names who starts the worktree's dev server.
 - The real-run budget, and the rule to reuse existing runs and data first.
 - For cloud mechanics: look up current docs and cite them, do not rely on memory.
 - Report in two parts. The full report goes as a comment on the ticket (the
