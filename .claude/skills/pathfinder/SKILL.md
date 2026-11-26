@@ -18,7 +18,32 @@ The ticket with its comments, the issues it links, the repo's CLAUDE.md, and
 the code it names. A request in words with no issue: search the tracker for an
 existing issue first, create one only when none exists.
 
-## 2. Shape
+## 2. Challenge
+
+You maintain this codebase after the ticket merges. Before shaping, judge the
+ticket as its maintainer, from the code you read.
+
+Run the challenge as one subagent on the strongest model available (Opus or
+above), whatever model the session runs. Brief it with the ticket and the
+files to read, never with your own opinion of the ticket. It returns
+objections, each with its receipt and alternative, or none.
+
+| Question | Object when |
+|---|---|
+| Does it need to exist? | The code or a setting already does it, or the need is speculative |
+| Is it the root? | The ticket names a symptom and the cause sits elsewhere, or sibling code paths carry the same fault |
+| Does it fit? | It adds a second way to do what the codebase already does one way, or a special case for one caller where a general change costs the same |
+| What does it leave behind? | It replaces code without deleting it, or adds a dependency, flag or abstraction with one user |
+
+Object only when your alternative changes what gets built. An objection
+carries a receipt (`file:line` or a command with its output) and the
+alternative you would build instead. It goes in the batch of questions in
+step 4, recommendation first, and the owner's answer goes under Decisions.
+This is the one point where disagreement stops the work: once the ticket is
+ready, trailblazer does not ask. A choice of how to build it (which helper to
+reuse, which pattern to follow) is not an objection: write it under Fit.
+
+## 3. Shape
 
 | The ticket holds | Shape |
 |---|---|
@@ -28,14 +53,19 @@ existing issue first, create one only when none exists.
 
 Split by area, never by size. A long checklist in one area stays one ticket.
 
-## 3. Resolve
+## 4. Resolve
 
 Every open point gets an answer from, in this order: the ticket and its
 comments, linked issues, the repo's docs, the code, a command you run. A
 reversible choice nothing answers takes the simplest option, recorded under
 Decisions as a default.
 
-Ask the user only what is irreversible, outward-facing, removes behavior a
+Gather evidence before any question reaches the user: read the callers, run
+the command, check the history (`git log`, the linked issues). A question
+arrives with what you checked and what you found. An objection whose receipt
+you cannot reproduce is dropped, not asked.
+
+Ask the user only your objections from step 2 and what is irreversible, outward-facing, removes behavior a
 user can see, or is the owner's call (wording, pricing, scope). One batch,
 each question with your recommendation first. Nothing qualifies: ask nothing.
 
@@ -43,7 +73,7 @@ When the real cost dwarfs the ask (a new dependency, a schema change, a
 third-party patch, new credentials), write the cost on the issue and ask
 before marking it ready.
 
-## 4. Write
+## 5. Write
 
 Edit the issue body in place. Keep the owner's own wording and checkboxes;
 sharpen them and add what is missing. When an answer you resolved makes one
@@ -65,6 +95,9 @@ questions with the reason; change it only after the user agrees.
 ## Touches
 <files or directories the change will likely edit, from reading the code>
 
+## Fit
+<existing code the change reuses or extends, the pattern it follows, and what it deletes, each with file:line>
+
 ## Needs
 <environment, test data, sign-ins, keys, tools the build and the check need; "nothing beyond local setup" when true>
 
@@ -81,7 +114,7 @@ child carries the full block.
 Ready means: every acceptance item names its check, every section is filled,
 and no question is left open on the issue.
 
-## 5. Hand off
+## 6. Hand off
 
 Reply with the issue link, its shape (ticket or map), the defaults you took,
 and anything only the user can do. When trailblazer invoked you, return to it.

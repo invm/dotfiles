@@ -18,7 +18,8 @@ child tickets. The merge closes it, and the final report follows as a comment.
 **First, run the pathfinder skill on the argument.** It returns at once when
 the ticket or map is ready, and otherwise makes it ready: resolves what is
 vague, asks the user its one batch of questions, rewrites the issue in place.
-Its Decisions are answers: do not ask them again.
+Its Decisions are answers: do not ask them again. An objection the owner
+overruled there is settled: build what the owner chose.
 
 The user's trust rests on **receipts**. A receipt is the command and its
 output, a screenshot path, or a measured number that proves one claim. Every
@@ -46,7 +47,7 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
    | Tickets to skip | None |
    | Real runs | Up to 10 for the map. Spend one only when a check needs new data; otherwise reuse runs and data that already exist |
    | Goal and how "done" is checked | The map's own goal text. Every ticket is checked against it |
-   | A reversible choice a ticket leaves open | The simplest option |
+   | A reversible choice a ticket leaves open | The simplest option that follows how the codebase already does it |
 
    Ask only what is still open and is one of: irreversible, outward-facing
    (publishing, a new credential, another repository, an environment outside
@@ -61,7 +62,7 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
    answers and defaults you resolved, and the list of what only the user can
    do, each with the ticket it blocks. Start work without waiting for a reply.
 5. After that, do not stop to ask. For any decision the tickets leave open, take
-   the simplest default, record it under "Decisions so far" on the map issue and
+   the simplest default that follows how the codebase already does it, record it under "Decisions so far" on the map issue and
    in the PR body, and move on.
 6. The map issue is the session's memory. After every round, update it: ticket
    status, decisions, the leftovers list. A fresh session must be able to resume
@@ -80,11 +81,28 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
 - **Blocking, other tickets depend on it:** finish the rounds in flight, then
   stop the map and ask the user.
 
+## Disagreement
+
+You and the agents maintain this codebase after the map merges. When the code
+shows that a ticket is wrong, do not build it as written and do not stop the
+map.
+
+| Finding | Action |
+|---|---|
+| The ticket's approach is wrong and its acceptance items still hold (an existing helper does it, the cause sits elsewhere, a general change replaces a special case) | Get a ruling: a second agent on Opus, never the builder, reads the ticket and the code without the builder's conclusion and names the approach it would take. It names the same one: build it, put "## Departed from ticket" with the receipt in the PR body, merge. It does not: build the ticket as written and add the objection to the held list |
+| The acceptance items are wrong, or the fitting approach changes what a user sees or costs far more than the ask | Hold it: build the approach you recommend on its branch, open the PR, do not merge. Tickets that depend on it branch from it and are held too. Add it to the held list |
+| The fitting approach removes behavior a user can see, or deletes tests | Do not build it. Add it to the held list |
+
+The **held list** lives on the map issue: `ticket | objection | receipt | PR |
+recommendation`. It never stops the map. The user rules on all of it once, in
+the status under "Done": merge, rebuild as written, or drop.
+
 ## Models and load
 
 - Build rounds and verification rounds: Sonnet subagents.
 - Opus is slow: use it rarely, only for a review round on a risky diff
-  (security, schema, release pipeline), never for building.
+  (security, schema, release pipeline) or a ruling under "Disagreement",
+  never for building.
 - Lookups (where is X, what calls Y, read this log): Haiku subagents.
 - You review and decide. You do not build.
 - At most three heavy agents at once (builds, test suites, dev servers), plus
@@ -106,7 +124,11 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
 3. **Your review.** Read the diff for scope creep, comments the repo forbids,
    security rules, dead code, and unquestioned defaults (a page size of 10, a
    cap of 100, a hidden field): each one is either justified in the PR body or
-   changed. Then **re-run one claim yourself**: the test command, the curl, the
+   changed. Read it as the maintainer too: a new helper where grep finds an
+   existing one, a second way to do what the codebase does one way, a special
+   case for one caller, replaced code left in place, an abstraction, flag or
+   option with one user. Each one goes back in a fix round or is justified in
+   the PR body. Then **re-run one claim yourself**: the test command, the curl, the
    plan. An agent's report is a claim; your re-run is the receipt.
 4. **Infrastructure.** You run plan, read it, and apply, only to environments
    the user allowed. Re-plan afterwards to confirm no drift. Then trace the
@@ -252,6 +274,11 @@ Gates apply only to improvements outside the feature area the map works on.
 - Setup the fresh worktree needs, as commands.
 - The skills to use, by name.
 - Acceptance items, each needing a named test or a receipt.
+- Ownership: the ticket's Fit section, and the rule behind it. Search for
+  existing code before writing new, follow the neighbouring pattern, delete
+  what the change replaces, add nothing for one caller or for later. When the
+  code shows the ticket is wrong, report the objection with its receipt and
+  the alternative instead of building around it.
 - Hard limits: no push, PR, merge, tag or stash; no migration run against any
   shared or deployed database (a local or disposable worktree database is
   fine); no pattern kills (`pkill`,
@@ -299,7 +326,8 @@ result, and every 20 minutes while a round is still running. Answer the user's q
 ## Done
 
 When the map's goal is met, finish the tickets in flight, then post a status:
-goal met, and each open ticket with a recommendation (build, list, drop). Wait
+goal met, each open ticket with a recommendation (build, list, drop), and the
+held list as one batch of decisions, each with its PR and your recommendation. Wait
 for the user before starting more.
 
 The map is done when every ticket is merged and closed, the map issue is
@@ -314,7 +342,8 @@ with a link to its evidence (PR, CI run, command output, screenshot, plan
 output), and every claim in the report links to its evidence or is labelled
 "not verified"; merged PRs and closed tickets; what was deployed where; what the
 other environments still need; what was not verified; incidents; every
-leftover with its fate (fixed in PR #n, ticket #n, needs your decision); open
+leftover with its fate (fixed in PR #n, ticket #n, needs your decision); every
+place the build departed from a ticket as written, and why; open
 decisions; cost; time from the timing log (total, per ticket, and the sum per
 "waited on" reason); confirmation that worktrees, branches, temp files and test
 resources are gone.
