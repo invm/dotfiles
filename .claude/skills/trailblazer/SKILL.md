@@ -125,8 +125,12 @@ the status under "Done": merge, rebuild as written, or drop.
 - You review and decide. You do not build.
 - At most three heavy agents at once (builds, test suites, dev servers), plus
   light ones (docs, lookups, small UI or config changes) up to four agents in
-  total. The domain agents of one fan-out count one each. Full test suites and end-to-end runs go one at a time across the
-  whole map. Check `uptime` before you dispatch; above the core count, wait.
+  total. The domain agents of one fan-out count one each. Full test suites,
+  parity runs and end-to-end runs go one at a time across the whole map.
+  Before you dispatch a round that runs full suites, parity, e2e, image or
+  compile builds, or dev servers, check `uptime`; above the core count, wait.
+  Build, review and fix rounds that only edit code, read code or run
+  targeted tests mostly wait on the model: dispatch them at any load.
 - **Keep the slots full.** While a ticket is unblocked and a slot is free,
   dispatch it. A ticket waiting on CI, on verification or on the user frees
   its slot: start the next ticket's build round then, not after the merge.
