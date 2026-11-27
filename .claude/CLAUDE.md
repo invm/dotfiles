@@ -21,7 +21,8 @@
 - Zero code comments by default. Exception: real constraint code can't express (invariant, workaround with issue link, gotcha).
 - No secret-shaped test data.
 - Hard cutoff by default: no backward compat, shims, or intermediate stages unless asked.
-- Hard cutoff never covers removing user-visible behavior or deleting tests. Each such removal needs my explicit approval, asked before coding, and the PR lists it under "## Removed behavior" with what replaces it.
+- Hard cutoff never covers removing user-visible behavior or deleting tests that still have a subject. Each such removal needs my explicit approval, asked before coding, and the PR lists it under "## Removed behavior" with what replaces it.
+- Exception, no approval needed, never block on it: a test whose subject the ticket removes (code, URL or internal path that no longer exists) is deleted with it. List each one in the PR under "## Removed behavior" with what still covers the behavior, and again in the final report of the map.
 
 ## Safety & Scope
 
