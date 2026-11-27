@@ -12,7 +12,7 @@ the user can make blocks it.
 
 **A single ticket is its own map.** The issue is both the map and its one
 ticket: its checkboxes are the acceptance items, it gets one PR, and its
-comments hold the decisions, leftovers and timing log. Never split it into
+body holds the decisions, leftovers and timing log. Never split it into
 child tickets. The merge closes it, and the final report follows as a comment.
 
 **First, run the pathfinder skill on the argument.** It returns at once when
@@ -62,14 +62,30 @@ receipt. A claim without one is a guess: verify it or label it "not verified".
    answers and defaults you resolved, and the list of what only the user can
    do, each with the ticket it blocks. Start work without waiting for a reply.
 5. After that, do not stop to ask. For any decision the tickets leave open, take
-   the simplest default that follows how the codebase already does it, record it under "Decisions so far" on the map issue and
+   the simplest default that follows how the codebase already does it, record it under "Decisions" on the map issue and
    in the PR body, and move on.
-6. The map issue is the session's memory. After every round, update it: ticket
-   status, decisions, the leftovers list. A fresh session must be able to resume
+6. The map issue is the session's memory, and the memory lives in its body.
+   After every round, update the body in place: ticket status, and one section
+   each for `## Decisions`, `## Leftovers`, `## Held` and `## Timing log`.
+   "On the map issue" in this skill means in these sections. A closed issue is
+   read from its body; a long thread is not read at all.
+   - Only you edit an issue body. Fetch it again right before each edit: the
+     edit replaces the whole body, and the owner may have ticked a box since.
+   - An issue gets two kinds of comment from you: one line per merged PR (the
+     PR, its commit, the box ticked) and the final report. Agents do not
+     comment on issues.
+
+   A fresh session must be able to resume
    from the issue alone, because your context will run out and get summarised.
    After a summary, re-read the map issue before the next round. A statement
    that is in the summary and not on the issue is a claim, not a fact.
-7. Keep a **timing log** on the map issue, one line when each round ends:
+7. **Report directory.** Round reports are about a diff, so they belong on the
+   PR, and most rounds end before the PR exists. Until then they wait in
+   `$(git rev-parse --git-common-dir)/trailblazer/<ticket>/`, one file per
+   round, `<nn>-<round kind>.md`. Git never tracks it, every worktree of the
+   repo shares it, and it survives a restart. You create it and name the file
+   in each brief.
+8. Keep a **timing log** on the map issue, one line when each round ends:
    `ticket | round | start | end | waited on`. Start and end come from `date`,
    never from memory. "Waited on" names what held the ticket before the round
    started: nothing, CI, an agent, the user's answer, a blocker.
@@ -127,12 +143,14 @@ the status under "Done": merge, rebuild as written, or drop.
    - **Two or more: contract, then fan-out.** The contract is every shape that
      crosses a domain boundary: schema change, action or endpoint name with
      input and output types, error codes, CLI flags and output, the terms and
-     copy a user reads. Post it as a comment on the ticket. Write it yourself
+     copy a user reads. It lives in the ticket's body under `## Contract`; a
+     changed contract replaces the old one. Write it yourself
      when the ticket and one lookup settle it; otherwise the agent of the
-     domain that owns the data writes it in a contract round and builds
-     nothing. Then dispatch one build agent per domain, all at once, in the
-     ticket's worktree. Each brief carries the contract link and the
-     fan-out rules under "Every brief contains".
+     domain that owns the data writes it to its report file in a contract
+     round and builds nothing, and you copy it into the body. Then dispatch
+     one build agent per domain, all at once, in the
+     ticket's worktree. Each brief carries the ticket link, where the
+     contract is, and the fan-out rules under "Every brief contains".
    - **Integrate.** When every domain agent has reported, run the lint gate and
      the touched tests on the combined tree, then commit, one commit per
      domain. A failure goes back as a fix round to the agent that owns the
@@ -178,8 +196,14 @@ the status under "Done": merge, rebuild as written, or drop.
 6. Fix round if needed. Before merge: main branch merged in, PR body matches
    the final diff, every PR with a user-visible change carries its
    screenshots (see "UI tickets"), every leftover from this
-   ticket has a fate. Then push, PR, CI green, merge, confirm the issue closed,
-   delete the worktree and the local and remote branches.
+   ticket has a fate, and nothing that outlives the ticket exists only in a
+   report or a comment: open leftovers and decisions are in an issue body.
+   Then push and open the PR. Post the ticket's report files on it as
+   comments, in round order, and delete each file once its comment is up.
+   Later rounds comment on the PR directly. CI green, merge, confirm the
+   issue closed, comment the one merge line on the issue, delete the
+   worktree, the local and remote branches, and the ticket's report
+   directory.
 
 ## Before every round
 
@@ -328,12 +352,15 @@ Gates apply only to improvements outside the feature area the map works on.
   files you touched; the brief names who starts the worktree's dev server.
 - The real-run budget, and the rule to reuse existing runs and data first.
 - For cloud mechanics: look up current docs and cite them, do not rely on memory.
-- Report in two parts. The full report goes as a comment on the ticket (the
-  one write the brief always allows): commits, a receipt per acceptance item,
-  measured numbers, fixes with root cause and receipt, not verified, leftovers
-  as `what | receipt | fate`, open decisions, cost, cleanup done. What comes
-  back to you is at most 20 lines: result, the comment link, not verified,
-  leftovers, open decisions.
+- Report in two parts. The full report: commits, a receipt per acceptance
+  item, measured numbers, fixes with root cause and receipt, not verified,
+  leftovers as `what | receipt | fate`, open decisions, cost, cleanup done.
+  It goes to the one place the brief names: a comment on the ticket's PR when
+  the PR is open (the one outside write the brief always allows), otherwise
+  the round's file in the report directory. Never a comment on an issue. What
+  comes back to you is at most 20 lines: result, the comment link or file
+  path, not verified, leftovers, open decisions. A lookup round has no full
+  report; its answer comes back to you.
 
 ## Talking to the user
 
@@ -380,8 +407,8 @@ other environments still need; what was not verified; incidents; every
 leftover with its fate (fixed in PR #n, ticket #n, needs your decision); every
 place the build departed from a ticket as written, and why; open
 decisions; cost; time from the timing log (total, per ticket, and the sum per
-"waited on" reason); confirmation that worktrees, branches, temp files and test
-resources are gone.
+"waited on" reason); confirmation that worktrees, branches, report
+directories, temp files and test resources are gone.
 
 When the user asks how fast past runs were, run `stats.py` from this skill's
 directory inside the project: one row per past run, read from the session
