@@ -6,18 +6,21 @@ export const register: Register = on => {
       return next(e)
     }
 
-    const { Box, Button } = $.ui.resolve(e)
+    const { Box, Button, Text } = $.ui.resolve(e)
     const block = await next(e)
 
     return (
       <Box flexDirection="column">
         {block}
-        <Button
-          key="copy"
-          label="copy"
-          action="app:cycleDiffBase"
-          onPress={press => $.ui.copy({ text: e.props.source, surface: press.surface })}
-        />
+        <Box>
+          <Button
+            key="copy"
+            label="copy"
+            action="app:cycleDiffBase"
+            onPress={press => $.ui.copy({ text: e.props.source, surface: press.surface })}
+          />
+          <Text dimColor> ctrl+x ctrl+y</Text>
+        </Box>
       </Box>
     )
   })
