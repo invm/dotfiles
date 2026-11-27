@@ -297,6 +297,13 @@ lookup agent to reproduce it, or drop it. It is never listed or reported bare.
 | Needs the owner's decision (wording, pricing, removing behavior) | In the next status, with its receipt and your recommendation. Work continues |
 | Improvement outside that area | A ticket with a gate (see "Gates"), or one line on the leftovers list |
 
+A fix that changes a sign-in, permission or access rule (roles, org
+membership, invitations, required sign-in methods) is held, never deferred.
+Make it a ticket on the map (sub-issue, labeled), list it under `## Held` with
+its receipt and your recommended fix, and ask in the next status. Keep building
+the other tickets. The map stays open until the owner answers. Any other bug
+fix is not removing behavior: it goes in row 2.
+
 "Pre-existing" is not a fate. The rest of a partial fix belongs to the ticket.
 An unticked acceptance item is unfinished work: the ticket stays open until
 the item is done or the user drops it.

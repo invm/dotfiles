@@ -22,6 +22,7 @@
 - No secret-shaped test data.
 - Hard cutoff by default: no backward compat, shims, or intermediate stages unless asked.
 - Hard cutoff never covers removing user-visible behavior or deleting tests that still have a subject. Each such removal needs my explicit approval, asked before coding, and the PR lists it under "## Removed behavior" with what replaces it.
+- Fixing a correctness or data bug is not removing behavior. No approval needed; list it under "## Removed behavior". Exception: a fix that changes a sign-in, permission or access rule (roles, org membership, invitations, required sign-in methods) needs my yes first.
 - Exception, no approval needed, never block on it: a test whose subject the ticket removes (code, URL or internal path that no longer exists) is deleted with it. List each one in the PR under "## Removed behavior" with what still covers the behavior, and again in the final report of the map.
 
 ## Safety & Scope
